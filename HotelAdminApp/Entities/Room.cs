@@ -8,5 +8,6 @@ namespace HotelAdminApp.Entities
 {
     class Room
     {
+
     }
 }
