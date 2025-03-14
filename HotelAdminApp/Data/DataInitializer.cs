@@ -57,5 +57,8 @@ namespace HotelAdminApp.Data
                 //add initial data if it doesnt exists
             }
         }
+
+
+
     }
 }
