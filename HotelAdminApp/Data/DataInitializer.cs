@@ -38,5 +38,24 @@ namespace HotelAdminApp.Data
             //retuen the configured DbContext instance
             return dbContext;
         }
+
+
+        //These methods work together to check if database has existing data , if not then add data.
+
+        //Checks if initial data exists in database and prevents adding again same data
+        public static bool IfAnyDataExists(ApplicationDbContext dbContext)
+        {
+            return dbContext.Rooms.Any() || dbContext.Customers.Any() || dbContext.Customers.Any() || dbContext.Bookings.Any() || dbContext.Invoices.Any();
+        }
+
+        //Seed data
+        public static void SeedData(ApplicationDbContext dbContext)
+        {
+            //check if data already exists
+            if(!IfAnyDataExists(dbContext))
+            {
+                //add initial data if it doesnt exists
+            }
+        }
     }
 }
