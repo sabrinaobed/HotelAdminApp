@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelAdminApp.Data
 {
-    class DataInitializer
+    public class DataInitializer
     {
 
-        //This method creates and returns an instance of ApplicationDbContext
+      //Mthod to build DbContext with configuration
         public static ApplicationDbContext Build()
         {
             //loading configuration from appsettings.json
@@ -26,15 +27,20 @@ namespace HotelAdminApp.Data
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             //Create DbcOntextOptionsBuilder with SQL server
-            var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                                  .UseSqlServer(connectionString) 
                                  .Options;
 
             //Create an instance of ApplicationDbContext using configured options
-            var dbContext = new ApplicationDbContext(contextOptions);
+            var dbContext = new ApplicationDbContext(options);
 
             //applying migrations 
             dbContext.Database.Migrate();
+
+            //Seed Data if required
+            SeedData(dbContext);
+
+           
 
             //retuen the configured DbContext instance
             return dbContext;
@@ -46,22 +52,31 @@ namespace HotelAdminApp.Data
         //Checks if initial data exists in database and prevents adding again same data
         public static bool IfAnyDataExists(ApplicationDbContext dbContext)
         {
-            return dbContext.Rooms.Any() || dbContext.Customers.Any() || dbContext.Customers.Any() || dbContext.Bookings.Any() || dbContext.Invoices.Any();
+            return dbContext.Rooms.Any() || dbContext.Customers.Any() || dbContext.Bookings.Any() || dbContext.Invoices.Any();
         }
 
-        //Seed data
+        //Seed intial data
         public static void SeedData(ApplicationDbContext dbContext)
         {
-            //check if data already exists
-            if(!IfAnyDataExists(dbContext))
+            Console.WriteLine("Checking if database has data...");
+
+            if (!IfAnyDataExists(dbContext)) // Check if data exists
             {
-                //add initial data if it doesnt exists
+                Console.WriteLine("Seeding data now...");
+
                 SeedRooms(dbContext);
                 SeedCustomers(dbContext);
                 SeedBookings(dbContext);
-                SeedInvoice(dbContext);
+                SeedInvoices(dbContext);
+
+                Console.WriteLine("Seeding completed!");
+            }
+            else
+            {
+                Console.WriteLine("Data already exists. Skipping seeding.");
             }
         }
+
 
 
         //Seeding initial data for ROOMS
@@ -69,10 +84,10 @@ namespace HotelAdminApp.Data
         {
             dbContext.Rooms.AddRange(new List<Room>
             {
-                new Room { RoomNumber = "101",RoomType = "Single", Capacity = 1, PricePerNight = 100, ExtraBeds = 0},
-                new Room { RoomNumber = "102",RoomType = "Double", Capacity = 2, PricePerNight = 150, ExtraBeds = 1},
-                new Room { RoomNumber = "103",RoomType = "Double", Capacity = 3, PricePerNight = 200, ExtraBeds = 2},
-                new Room { RoomNumber = "104",RoomType = "Single", Capacity = 1, PricePerNight = 100, ExtraBeds = 0},
+                new Room { RoomNumber = "101",RoomType = "Single", Capacity = 1, PricePerNight = 100m, ExtraBeds = 0},
+                new Room { RoomNumber = "102",RoomType = "Double", Capacity = 2, PricePerNight = 150m, ExtraBeds = 1},
+                new Room { RoomNumber = "103",RoomType = "Suite", Capacity = 3, PricePerNight = 200m, ExtraBeds = 2},
+                new Room { RoomNumber = "104",RoomType = "Single", Capacity = 1, PricePerNight = 100m, ExtraBeds = 0},
             }
             );
             dbContext.SaveChanges();
@@ -97,26 +112,47 @@ namespace HotelAdminApp.Data
         //Seeding initial data for BOOKINGS
         public static void SeedBookings(ApplicationDbContext dbContext)
         {
+            var room101 = dbContext.Rooms.First(r => r.RoomNumber == "101").RoomId;
+            var room102 = dbContext.Rooms.First(r => r.RoomNumber == "102").RoomId;
+            var customer1 = dbContext.Customers.First(c => c.Name == "Hannah Svensson").CustomerId;
+            var customer2 = dbContext.Customers.First(c => c.Name == "Sadrick John").CustomerId;
+
             dbContext.Bookings.AddRange(new List<Booking>
+        {
+            new Booking
             {
-                new Booking{Room = dbContext.Rooms.FirstOrDefault(r => r.RoomNumber == "101"),Customer = dbContext.Customers.FirstOrDefault(c => c.Name == "Hannah Svensson"), StartDate = DateTime.Today.AddDays(1), EndDate = DateTime.Today.AddDays(3),NumberOfGuests = 1},
-                new Booking{Room = dbContext.Rooms.FirstOrDefault(r => r.RoomNumber == "102"),Customer = dbContext.Customers.FirstOrDefault(c => c.Name == "Sadrick John "), StartDate = DateTime.Today.AddDays(5), EndDate = DateTime.Today.AddDays(7),NumberOfGuests = 2}
-            });
+                RoomId = room101,
+                CustomerId = customer1,
+                StartDate = DateTime.Today.AddDays(1),
+                EndDate = DateTime.Today.AddDays(3),
+                NumberOfGuests = 1
+            },
+            new Booking
+            {
+                RoomId = room102,
+                CustomerId = customer2,
+                StartDate = DateTime.Today.AddDays(5),
+                EndDate = DateTime.Today.AddDays(7),
+                NumberOfGuests = 2
+            }
+        });
             dbContext.SaveChanges();
         }
 
         //Seeding initial data for INVOICES
-        public static void SeedInvoice(ApplicationDbContext dbContext)
+        public static void SeedInvoices(ApplicationDbContext dbContext)
         {
-            dbContext.Invoices.AddRange(new List<Invoice>
-            {
-                new Invoice{Booking  = dbContext.Bookings.FirstOrDefault(b => b.Customer.Name == "Hannah Svensson"), TotalAmount = 200, IsPaid = false, DueDate = DateTime.Today.AddDays(10) },
-                new Invoice{Booking  = dbContext.Bookings.FirstOrDefault(b => b.Customer.Name == "Sdrick John"), TotalAmount = 300, IsPaid = true, DueDate = DateTime.Today.AddDays(10) }
-            });
+            var bookings = dbContext.Bookings.ToList();
 
+            dbContext.Invoices.AddRange(new List<Invoice>
+        {
+            new Invoice { BookingId = bookings[0].BookingId, TotalAmount = 200m, IsPaid = false, DueDate = DateTime.Today.AddDays(10) },
+            new Invoice { BookingId = bookings[1].BookingId, TotalAmount = 300m, IsPaid = true, DueDate = DateTime.Today.AddDays(10) }
+        });
             dbContext.SaveChanges();
         }
 
 
     }
 }
+
