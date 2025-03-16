@@ -3,54 +3,110 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace HotelAdminApp.Contexts
 {
-    class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        //These DbSets represent the tables in the database 
-        public DbSet<Room> Rooms { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Room> Rooms { get; set; } = null!;
+        public DbSet<Customer> Customers { get; set; } = null!;
+        public DbSet<Booking> Bookings { get; set; } = null!;
+        public DbSet<Invoice> Invoices { get; set; } = null!;
 
-        //This is the default constructor wthout parameters and is used if you want to instanseria context without options
-        public ApplicationDbContext()
-        {
 
-        }
+        //Parameterless Constructor (For EF Core CLI)
+        public ApplicationDbContext() { }
 
-        //This constructor accepts DbContextOptions and is to configure context in ASP.NET Core,it allows DI to provide database configuration
+        // Constructor for Dependency Injection (DI)
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+            : base(options)
         {
         }
 
 
-        //This method configures the database connection settings, it is automatically executed when the context is used.
+        // Override OnConfiguring for EF Core CLI (Remove-Migration)
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-         if(!optionsBuilder.IsConfigured)//checks if options are already configured
+            if (!optionsBuilder.IsConfigured) // Ensure we only set it if not already configured
             {
-                //Loads the configuration from the appsettings.json file
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
-                //Gets the connection string from the appsettings.json file
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-                //Configures the connection to the database SQL
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Define One-to-Many relationship between Booking and Customer
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Customer)
+                .WithMany(c => c.Bookings)
+                .HasForeignKey(b => b.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Define One-to-Many relationship between Booking and Room
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Room)
+                .WithMany(r => r.Bookings)
+                .HasForeignKey(b => b.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Define One-to-One relationship between Booking and Invoice
+            modelBuilder.Entity<Invoice>()
+            .HasOne(i => i.Booking)
+            .WithOne(b => b.Invoice)
+            .HasForeignKey<Invoice>(i => i.BookingId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            //Adding fluent API Constraints
+
+            //Customer Constraints
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Customer>()
+                .Property(c => c.Email)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            //Room Constraints
+
+            modelBuilder.Entity<Room>()
+                .Property(r => r.RoomNumber)
+                .IsRequired()
+                .HasMaxLength(10);
+
+            modelBuilder.Entity<Room>()
+                .Property(r => r.RoomType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<Room>()
+                .Property(r => r.PricePerNight)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");
+
+
+            // Invoice Constraints
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.TotalAmount)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");    
+
+
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
-
-
-
 }

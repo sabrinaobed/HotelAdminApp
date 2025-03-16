@@ -9,7 +9,8 @@ namespace HotelAdminApp
             //Creating an instance of ApplicationDbContext using DataInitializer.Build() method
             using (var dbContext = DataInitializer.Build())
             {
-               
+                DataInitializer.SeedData(dbContext);    
+
             }
         }
     }
