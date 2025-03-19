@@ -34,11 +34,49 @@ namespace HotelAdminApp.Services
         {
             return _dbContext.Bookings.Include(b => b.Customer).Include(b => b.Room).FirstOrDefault(b => b.BookingId == id);//searches  a booking by its PK, if object found its fine other ,? represents its null otherwise.
         }
-    
-    
-    
-    
-    
+
+
+
+                                                //Add a new booking with all valid attributes
+
+
+        public void AddBooking(Booking booking)
+        {
+            if(booking == null)
+            {
+                throw new ArgumentNullException(nameof(booking), "Booking cannot be null.");
+            }
+            //check if the customer exists
+            var customerExists = _dbContext.Customers.Any(c => c.CustomerId == booking.CustomerId);
+            if(!customerExists)
+            {
+                throw new ArgumentException($"Invalid Customer ID, customer does not exist");
+            }
+            //check if the room exists
+            var roomExists = _dbContext.Rooms.Any(r => r.RoomId == booking.RoomId);
+            if(!roomExists)
+            {
+                throw new ArgumentException($"Invalid Room ID, room does not exist");
+            }
+            //ensuring start date is today or in coming days
+            if(booking.StartDate < DateTime.Today)
+            {
+                throw new ArgumentException("Cannot book a room for past dates");
+            }
+            //ensuring end date is after start date
+            if(booking.EndDate <= booking.StartDate)
+            {
+                throw new ArgumentException("End date must be after the start date");
+            }
+            //Check if the room is available for the given dates
+            bool roomBooked = _dbContext.Bookings.Any(b => b.RoomId == booking.RoomId
+           && (booking))
+
+
+
+        }
+
+
     }
 
 
