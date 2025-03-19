@@ -69,8 +69,18 @@ namespace HotelAdminApp.Services
                 throw new ArgumentException("End date must be after the start date");
             }
             //Check if the room is available for the given dates
-            bool roomBooked = _dbContext.Bookings.Any(b => b.RoomId == booking.RoomId
-           && (booking))
+           bool roomBooked = _dbContext.Bookings.Any(b => b.RoomId == booking.RoomId &&
+           (booking.StartDate >= b.StartDate && booking.StartDate < b.EndDate) ||
+           (booking.EndDate > b.StartDate && booking.EndDate <= b.EndDate) ||
+           (booking.StartDate <= b.StartDate && booking.EndDate >= b.EndDate)
+            );
+            if(roomBooked)
+            {
+                throw new InvalidOperationException("Room is already booked for the given dates");
+            }
+
+            _dbContext.Bookings.Add(booking); //Add booking to DbSet
+            _dbContext.SaveChanges(); //Save changes to database
 
 
 
