@@ -31,6 +31,9 @@ namespace HotelAdminApp.Services
 
                                                //Get a specific booking by its ID
         public Booking? GetBookingById(int id)
+        {
+            return _dbContext.Bookings.Include(b => b.Customer).Include(b => b.Room).FirstOrDefault(b => b.BookingId == id);//searches  a booking by its PK, if object found its fine other ,? represents its null otherwise.
+        }
     
     
     
