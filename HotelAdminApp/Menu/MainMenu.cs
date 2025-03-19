@@ -14,6 +14,7 @@ namespace HotelAdminApp.Menu
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("---- Welcome to Hotel Admin App ---- \n");
                 Console.WriteLine("1. Manage Rooms");
                 Console.WriteLine("2. Manage Customers");
@@ -54,6 +55,7 @@ namespace HotelAdminApp.Menu
         {
             while(true)
             {
+                Console.Clear();
                 Console.WriteLine("---- Room Management Menu----\n");
                 Console.WriteLine("1. Show All Rooms");
                 Console.WriteLine("2. Add a Room");
@@ -92,6 +94,7 @@ namespace HotelAdminApp.Menu
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("---- Customer Management Menu ----\n");
                 Console.WriteLine("1. Show All Customers");
                 Console.WriteLine("2. Add a Customer");
@@ -129,6 +132,7 @@ namespace HotelAdminApp.Menu
         {
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("---- Booking Management Menu ----\n");
                 Console.WriteLine("1. Show All Booking");
                 Console.WriteLine("2. Add a Booking");
