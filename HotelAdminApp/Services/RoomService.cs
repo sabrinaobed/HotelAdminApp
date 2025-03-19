@@ -107,7 +107,7 @@ namespace HotelAdminApp.Services
             }
 
             //check if the room has any bookings before deletion
-            bool hasBookings = _dbContext.Bookings.Any(b => b.RoomId == id)
+            bool hasBookings = _dbContext.Bookings.Any(b => b.RoomId == id);
                 {
                 throw new InvalidOperationException("Cannot delete room with bookings.");
                 }
