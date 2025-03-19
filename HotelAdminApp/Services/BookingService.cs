@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelAdminApp.Services
 {
-    class BookingService
-    {
-    }
+   public  class BookingService
+   {
+   }
 }
