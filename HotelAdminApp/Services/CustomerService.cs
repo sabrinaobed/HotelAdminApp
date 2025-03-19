@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HotelAdminApp.Services
 {
-   public  class CustomerService
+    public class CustomerService
     {
         //showing reference to database context
         private readonly ApplicationDbContext _dbContext; //_dbContext is a class variable
@@ -21,25 +21,87 @@ namespace HotelAdminApp.Services
 
         //-------------------CURD OPERATIONS------------------------
 
-                                  //Get all Customers
-         
+        //Get all Customers
+
         public List<Customer> GetAllCustomers()
         {
             return _dbContext.Customers.ToList();
         }
 
-   
 
 
-        
-                           //Get a specific customer by its ID
-     public Customer? GetCustomerById(int id)
+
+
+        //Get a specific customer by its ID
+        public Customer? GetCustomerById(int id)
         {
             return _dbContext.Customers.Find(id);//searches  a customer by its PK, if object found its fine other ,? represents its null otherwise.
         }
 
 
 
+
+
+
+        //Add a new customer with all valid attributes
+
+
+        //methods to validate email nd phone nuumber for a customer
+        private bool IsValidEmail(string email)
+        {
+            return email.Contains("@") && email.Contains(".");
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            return phoneNumber.All(char.IsDigit) && phoneNumber.Length >= 8;
+        }
+
+
+        public void AddCustomer(Customer customer)
+        {
+            if (customer == null)
+            {
+                throw new ArgumentNullException(nameof(customer));
+            }
+
+            //validate customer name
+            if (string.IsNullOrWhiteSpace(customer.Name))
+            {
+                throw new ArgumentException("Customer name cannot be empty");
+            }
+
+            //validate customer email 
+            if (!IsValidEmail(customer.Email))
+            {
+                throw new ArgumentException("Invalid Email Address and format");
+            }
+            if (_dbContext.Customers.Any(c => c.Email == customer.Email))//if email already exists
+            {
+                throw new ArgumentException("Email already exists");
+            }
+
+
+            //validate customer phone number
+            if (!string.IsNullOrWhiteSpace(customer.PhoneNumber) && !IsValidPhoneNumber(customer.PhoneNumber))
+            {
+                throw new ArgumentException("Invalid Phone Number and format");
+            }
+
+            _dbContext.Customers.Add(customer); //Add customer to DbSet
+            _dbContext.SaveChanges(); //Save changes to database
+        }
+
+
+
+
+
+        //Update an existing customer with all valid attributes
+
+        public void UpdateCustomer(Customer customer)
+        {
+
+        }
 
 
 
