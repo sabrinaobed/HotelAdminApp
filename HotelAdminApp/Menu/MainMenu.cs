@@ -21,7 +21,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("4. Manage Invoices");
                 Console.WriteLine("0. Exit");
 
-                Console.Write("Select an option to proceed: ");
+                Console.Write("Select an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
@@ -39,7 +39,7 @@ namespace HotelAdminApp.Menu
                         Console.WriteLine("Exiting the app...");
                         return;
                     default:
-                        Console.WriteLine("Invalid choice!Choose the correct option and proceed again...");
+                        Console.WriteLine("Invalid choice!Choose the correct option...");
                         break;
                 }
             }
@@ -61,7 +61,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("4. Delete a Room");
                 Console.WriteLine("0. Back to Main Menu");
 
-                Console.WriteLine("Select an option to proceed: ");
+                Console.WriteLine("Select an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
@@ -76,14 +76,55 @@ namespace HotelAdminApp.Menu
                     case "4":
                         break;
                     case "0":
+                        Console.WriteLine("Back to Main Menu");
                         return;
                     default:
-                        Console.WriteLine("Invalid choice!Choose the correct option and proceed again...");
+                        Console.WriteLine("Invalid choice!Choose the correct option...");
                         break;
                 }
             }
-          
 
+        }
+
+
+        //Sub menu for Customer Management
+        private void CustomerMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("---- Customer Management Menu ----\n");
+                Console.WriteLine("1. Show All Customers");
+                Console.WriteLine("2. Add a Customer");
+                Console.WriteLine("3. Update a Customer");
+                Console.WriteLine("4. Delete a Customer");
+                Console.WriteLine("0. Back to Main Menu");
+
+                Console.WriteLine("Select an option to proceed: \n");
+
+                string choice = Console.ReadLine();
+
+                switch(choice)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "0":
+                        Console.WriteLine("Back to Main Menu");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option!Please try again with the correct option...");
+                        break;
+                }
+
+            }
+           
+
+            
 
 
         }
