@@ -6,7 +6,40 @@ using System.Threading.Tasks;
 
 namespace HotelAdminApp.Menu
 {
-    class MainMenu
+    public class MainMenu
     {
+
+        //This method is to show main menu and runs in loop until user chooses to exit.
+        public void ShowMainMenu()
+        {
+            Console.WriteLine("---- Welcome to Hotel Admin App ---- \n");
+            Console.WriteLine("1. Manage Rooms");
+            Console.WriteLine("2. Manage Customers");
+            Console.WriteLine("3. Manage Bookings");
+            Console.WriteLine("4. Manage Invoices");
+            Console.WriteLine("0. Exit");
+
+            Console.Write("Select an option to proceed: ");
+
+            string choice = Console.ReadLine();
+
+            switch(choice)
+            {
+                case "1":
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "0":
+                    Console.WriteLine("Exiting the app...");
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice!Chose the correct option and proceed again...");
+                    break;
+            }
+        }
     }
 }
