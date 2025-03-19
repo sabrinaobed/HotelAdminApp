@@ -106,7 +106,7 @@ namespace HotelAdminApp.Menu
 
                 string choice = Console.ReadLine();
 
-                switch(choice)
+                switch (choice)
                 {
                     case "1":
                         break;
@@ -125,6 +125,7 @@ namespace HotelAdminApp.Menu
                 }
 
             }
+        }
 
 
             //Sub menu for Bookings Management
@@ -164,10 +165,45 @@ namespace HotelAdminApp.Menu
 
             }
 
+        }
 
 
+        
 
+        //Sub menu for Invoice Management
+
+        private void InvoiceMenu()
+        {
+            while(true)
+            {
+                Console.Clear();
+                Console.WriteLine("---- Invoice Management Menu ----\n");
+                Console.WriteLine("1. Show All Invoices");
+                Console.WriteLine("2. Update Invoice as Paid");
+                Console.WriteLine("0. Back to Main Menu");
+
+                Console.WriteLine("Select an option to proceed: ");
+
+                string choice = Console.ReadLine(); 
+
+                switch(choice)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "0":
+                        Console.WriteLine("Back to Main Menu.");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid choice! Please try again with the right option...");
+                        break;
+                }
+            }
 
         }
+
+
+
     }
 }
