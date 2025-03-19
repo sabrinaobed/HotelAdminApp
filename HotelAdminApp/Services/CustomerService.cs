@@ -121,6 +121,26 @@ namespace HotelAdminApp.Services
         }
 
 
+                                       //Delete a customer by its ID
+
+        public void DeleteCustomer(int id)
+        {
+            var customer = _dbContext.Customers.Find(id);
+            if (customer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {id} not found.");
+            }
+
+
+            bool hasBookings = _dbContext.Bookings.Any(b => b.CustomerId == id);
+            if (hasBookings)
+            {
+                throw new InvalidOperationException("Cannot delete customer with bookings.");
+            }
+
+            _dbContext.Customers.Remove(customer);
+            _dbContext.SaveChanges();
+        }
 
 
 
