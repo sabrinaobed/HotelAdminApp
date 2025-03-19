@@ -12,34 +12,80 @@ namespace HotelAdminApp.Menu
         //This method is to show main menu and runs in loop until user chooses to exit.
         public void ShowMainMenu()
         {
-            Console.WriteLine("---- Welcome to Hotel Admin App ---- \n");
-            Console.WriteLine("1. Manage Rooms");
-            Console.WriteLine("2. Manage Customers");
-            Console.WriteLine("3. Manage Bookings");
-            Console.WriteLine("4. Manage Invoices");
-            Console.WriteLine("0. Exit");
-
-            Console.Write("Select an option to proceed: ");
-
-            string choice = Console.ReadLine();
-
-            switch(choice)
+            while (true)
             {
-                case "1":
-                    break;
-                case "2":
-                    break;
-                case "3":
-                    break;
-                case "4":
-                    break;
-                case "0":
-                    Console.WriteLine("Exiting the app...");
-                    return;
-                default:
-                    Console.WriteLine("Invalid choice!Chose the correct option and proceed again...");
-                    break;
+                Console.WriteLine("---- Welcome to Hotel Admin App ---- \n");
+                Console.WriteLine("1. Manage Rooms");
+                Console.WriteLine("2. Manage Customers");
+                Console.WriteLine("3. Manage Bookings");
+                Console.WriteLine("4. Manage Invoices");
+                Console.WriteLine("0. Exit");
+
+                Console.Write("Select an option to proceed: ");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "0":
+                        Console.WriteLine("Exiting the app...");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid choice!Choose the correct option and proceed again...");
+                        break;
+                }
             }
+        }
+        
+            
+
+        //------ SUB MENUS------
+        //Sub menu for Room Management
+
+        private void RoomMenu()
+        {
+            while(true)
+            {
+                Console.WriteLine("---- Room Management Menu----\n");
+                Console.WriteLine("1. Show All Rooms");
+                Console.WriteLine("2. Add a Room");
+                Console.WriteLine("3. Update a Room");
+                Console.WriteLine("4. Delete a Room");
+                Console.WriteLine("0. Back to Main Menu");
+
+                Console.WriteLine("Select an option to proceed: ");
+
+                string choice = Console.ReadLine();
+
+                switch(choice)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Invalid choice!Choose the correct option and proceed again...");
+                        break;
+                }
+            }
+          
+
+
+
         }
     }
 }
