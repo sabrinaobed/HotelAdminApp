@@ -100,6 +100,23 @@ namespace HotelAdminApp.Services
 
         public void UpdateCustomer(Customer customer)
         {
+            if (customer == null)
+            {
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
+            }
+
+            var existingCustomer = _dbContext.Customers.Find(customer.CustomerId);
+            if (existingCustomer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {customer.CustomerId} not found.");
+            }
+
+            existingCustomer.Name = customer.Name;
+            existingCustomer.Email = customer.Email;
+            existingCustomer.PhoneNumber = customer.PhoneNumber;
+
+            _dbContext.Customers.Update(existingCustomer);
+            _dbContext.SaveChanges();
 
         }
 
