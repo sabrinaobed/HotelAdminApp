@@ -11,7 +11,7 @@ namespace HotelAdminApp.Services
 {
     public class RoomService
     {
-        //showing refrence to database context
+        //showing reference to database context
         private readonly ApplicationDbContext _dbContext; //_dbContext is a class variable
 
         //This constructor intializes databse context via DI and ensure we can interact with database without re-intializing it.
