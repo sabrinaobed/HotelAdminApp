@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelAdminApp.Menu
 {
-    class Menus
+    class MainMenu
     {
     }
 }
