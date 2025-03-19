@@ -21,7 +21,7 @@ namespace HotelAdminApp.Services
 
         //-------------------CURD OPERATIONS------------------------
 
-        //Get all Customers
+                                                         //Get all Customers
 
         public List<Customer> GetAllCustomers()
         {
@@ -32,7 +32,7 @@ namespace HotelAdminApp.Services
 
 
 
-        //Get a specific customer by its ID
+                                                   //Get a specific customer by its ID
         public Customer? GetCustomerById(int id)
         {
             return _dbContext.Customers.Find(id);//searches  a customer by its PK, if object found its fine other ,? represents its null otherwise.
@@ -43,7 +43,7 @@ namespace HotelAdminApp.Services
 
 
 
-        //Add a new customer with all valid attributes
+                                            //Add a new customer with all valid attributes
 
 
         //methods to validate email nd phone nuumber for a customer
@@ -96,7 +96,13 @@ namespace HotelAdminApp.Services
 
 
 
-        //Update an existing customer with all valid attributes
+
+
+
+
+
+
+                                //Update an existing customer with all valid attributes
 
         public void UpdateCustomer(Customer customer)
         {
@@ -119,6 +125,13 @@ namespace HotelAdminApp.Services
             _dbContext.SaveChanges();
 
         }
+
+
+
+
+
+
+
 
 
                                        //Delete a customer by its ID
