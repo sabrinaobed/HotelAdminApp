@@ -122,9 +122,46 @@ namespace HotelAdminApp.Menu
                 }
 
             }
-           
 
-            
+
+            //Sub menu for Bookings Management
+        private void BookingMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("---- Booking Management Menu ----\n");
+                Console.WriteLine("1. Show All Booking");
+                Console.WriteLine("2. Add a Booking");
+                Console.WriteLine("3. Update a Booking");
+                Console.WriteLine("4. Delete a Booking");
+                Console.WriteLine("0. Back to Main Menu");
+
+                Console.WriteLine("Select an option to proceed: \n");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "0":
+                        Console.WriteLine("Back to Main Menu");
+                        return;
+                    default:
+                        Console.WriteLine("Invalid option!Please try again with the correct option...");
+                        break;
+                }
+
+            }
+
+
+
 
 
         }
