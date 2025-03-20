@@ -167,11 +167,12 @@ namespace HotelAdminApp.Controllers
             }
 
 
-
-
-
-
         }
+
+
+
+
+        //Delete a room
 
 
     }
