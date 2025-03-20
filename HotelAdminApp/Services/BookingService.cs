@@ -82,11 +82,51 @@ namespace HotelAdminApp.Services
             _dbContext.Bookings.Add(booking); //Add booking to DbSet
             _dbContext.SaveChanges(); //Save changes to database
 
-
-
         }
 
 
+
+                                               //Update a booking with all valid attributes
+         
+
+
+        public void UpdateBooking(Booking booking)
+        {
+            if (booking == null)
+            {
+                throw new ArgumentNullException(nameof(booking), "Booking cannot be null.");
+            }
+            //check if the booking exists
+            var existingBooking = _dbContext.Bookings.Find(booking.BookingId);
+            if(existingBooking == null)
+            {
+                throw new KeyNotFoundException($"Booking with ID {booking.BookingId} not found.");
+            }
+            //check the startdate is today or in future
+            if(booking.StartDate < DateTime.Today)
+            {
+                throw new ArgumentException("Cannot book a room for past dates");
+            }
+            //check the update booking may not cause conflict with previous bookings
+            bool roomBooked = _dbContext.Bookings.Any
+                 (b => b.RoomId == booking.RoomId &&
+                 b.BookingId != booking.BookingId && //ignore current booking
+                 booking.StartDate < b.EndDate &&
+                 booking.EndDate > b.StartDate //checks for overlapping dates
+                 );
+            if (roomBooked)
+            {
+                throw new InvalidOperationException("This room is already booked for selected dates");
+            }
+            //update booking details
+            existingBooking.StartDate= booking.StartDate;
+            existingBooking.EndDate = booking.EndDate;
+            existingBooking.NumberOfGuests = booking.NumberOfGuests;
+
+            _dbContext.Bookings.Update(existingBooking);
+            _dbContext.SaveChanges();
+
+        }
     }
 
 
