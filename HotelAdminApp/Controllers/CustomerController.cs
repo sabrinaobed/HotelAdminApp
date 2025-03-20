@@ -109,5 +109,50 @@ namespace HotelAdminApp.Controllers
 
         }
 
+
+
+
+        //Update a customer
+        public void UpdateCustomer()
+        {
+            Console.WriteLine("Enter Customer ID: ");
+            if(int.TryParse(Console.ReadLine(), out int customerId))
+            {
+                var customer = _customerService.GetCustomerById(customerId);
+                if (customer == null)
+                {
+                    Console.WriteLine("Customer not found");
+                    return;
+                }
+
+                Console.WriteLine($"Updating Customer: {customer.Name}");
+
+                Console.WriteLine("Enter new name:  ");
+                string newName = Console.ReadLine();
+                if(!string.IsNullOrWhiteSpace(newName))
+                    customer.Name = newName;
+
+
+                Console.WriteLine("Enter new email:  ");
+                string newEmail = Console.ReadLine();
+                if(!string.IsNullOrWhiteSpace(newEmail) && newEmail.Contains("@"))
+                    customer.Email = newEmail;
+
+
+                Console.WriteLine("Enter new phone number:  ");
+                string newPhoneNumber = Console.ReadLine();
+                if(!string.IsNullOrWhiteSpace(newPhoneNumber))
+                    customer.PhoneNumber = newPhoneNumber;
+
+                _customerService.UpdateCustomer(customer);
+                Console.WriteLine("Customer updated successfully!");
+
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+            }
+        }
+
     }
 }
