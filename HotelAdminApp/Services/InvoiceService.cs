@@ -1,5 +1,6 @@
 ﻿using HotelAdminApp.Contexts;
 using HotelAdminApp.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +35,13 @@ namespace HotelAdminApp.Services
 
         public Invoice? GetInvoiceById(int id)
         {
-            return _dbContext.Invoices.Find(id);//searches  an invoice by its PK, if object found its fine other ,? represents its null otherwise.
-
+            return _dbContext.Invoices
+                .Include(i => i.Booking) //include booking related to the invoice
+                .ThenInclude(b => b.Customer)// then include cutomer related to the booking
+                .FirstOrDefault(i => i.InvoiceId == id);//searches  a invoice by its PK, if object found its fine other ,? represents its null otherwise.
         }
+
+
+
     }
 }
