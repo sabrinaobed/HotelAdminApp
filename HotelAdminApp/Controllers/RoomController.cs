@@ -41,6 +41,32 @@ namespace HotelAdminApp.Controllers
 
 
 
+        //Get a room by Id
+        public void GetRoomById(int id)
+        {
+            Console.Write("Enter Room ID: ");
+            if(int.TryParse(Console.ReadLine(), out int roomId))
+            {
+                var room = _roomService.GetRoomById(roomId);
+                if(room == null)
+                {
+                    Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+                }
+                else
+                {
+                    Console.WriteLine("Room not found");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID! Please enter correct ID and try again.");
+            }
+
+        }
+
+
+
+
 
     }
 }
