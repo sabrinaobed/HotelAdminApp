@@ -23,17 +23,33 @@ namespace HotelAdminApp.Services
 
         //-------------------CURD OPERATIONS------------------------
 
-                                            //Get all Bookings
+                                                      //Get all Bookings
         public List<Booking> GetAllBookings()
         {
             return _dbContext.Bookings.Include(b => b.Customer).Include(b => b.Room).ToList(); //including customer and room as well in bookings
         }
+
+
+
+
+
+
+
 
                                                //Get a specific booking by its ID
         public Booking? GetBookingById(int id)
         {
             return _dbContext.Bookings.Include(b => b.Customer).Include(b => b.Room).FirstOrDefault(b => b.BookingId == id);//searches  a booking by its PK, if object found its fine other ,? represents its null otherwise.
         }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,6 +102,11 @@ namespace HotelAdminApp.Services
 
 
 
+
+
+
+
+
                                                //Update a booking with all valid attributes
          
 
@@ -125,6 +146,28 @@ namespace HotelAdminApp.Services
 
             _dbContext.Bookings.Update(existingBooking);
             _dbContext.SaveChanges();
+
+        }
+
+
+
+
+
+
+
+
+
+                                                    //Delete a booking by its ID
+   public void DeleteBooking(int id)
+        {
+            var booking = _dbContext.Bookings.Find(id);
+            if (booking == null)
+            {
+                throw new KeyNotFoundException($"Booking with ID {id} not found.");
+            }
+
+            _dbContext.Bookings.Remove(booking);
+            _dbContext.SaveChanges();   
 
         }
     }
