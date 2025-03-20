@@ -34,5 +34,33 @@ namespace HotelAdminApp.Controllers
             }
         }
 
+
+
+
+
+
+        //Get a customer by ID
+        public void GetCustomerById()
+        {
+            Console.WriteLine("Enter Customer ID: ");
+            if (int.TryParse(Console.ReadLine(), out int customerId))
+            {
+                var customer = _customerService.GetCustomerById(customerId);
+                if(customer != null)
+                {
+                    Console.WriteLine($"ID: {customer.CustomerId},CustomerName: {customer.Name}, Email: {customer.Email}, Phone: {customer.PhoneNumber}");
+                }
+                else
+                {
+                    Console.WriteLine("Customer not found");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Invalid Customer ID. ");
+            }
+        }
+
     }
 }
