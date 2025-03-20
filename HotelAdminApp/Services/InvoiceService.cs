@@ -56,5 +56,31 @@ namespace HotelAdminApp.Services
             _dbContext.SaveChanges();
 
         }
+
+
+
+        //Cancel Booking if invocie is overdue
+        public void CancelBookingIfInvoiceOverDue()
+        {
+            var today = DateTime.Today;
+
+            //finding all invoices which are overdue
+            var overdueInvoices = _dbContext.Invoices
+                .Include(i => i.Booking)
+                .Where(i => !i.IsPaid && i.DueDate < today.AddDays(-10))
+                .ToList();
+
+          foreach(var invoice in overdueInvoices)
+            {
+                var booking = invoice.Booking;
+                if(booking != null)
+                {
+                    _dbContext.Bookings.Remove(booking); //first remove booking
+                    
+                }
+                _dbContext.Invoices.Remove(invoice);//then remove invocie
+            }
+          _dbContext.SaveChanges();
+        }
     }
 }
