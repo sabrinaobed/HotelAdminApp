@@ -42,6 +42,19 @@ namespace HotelAdminApp.Services
         }
 
 
+                                  //Mark an invoice as paid /Update
+        public void MarkInvoicePaid(int invoiceId)
+        {
+            var invoice = _dbContext.Invoices.Find(invoiceId);
+            if(invoice == null)
+            {
+                throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
+            }
 
+            invoice.IsPaid = true;
+            _dbContext.Invoices.Update(invoice);
+            _dbContext.SaveChanges();
+
+        }
     }
 }
