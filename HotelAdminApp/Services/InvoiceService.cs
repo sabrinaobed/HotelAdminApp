@@ -1,4 +1,5 @@
 ﻿using HotelAdminApp.Contexts;
+using HotelAdminApp.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace HotelAdminApp.Services
         public InvoiceService(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext; //_dbContext is a class variable and dbContext is a parameter
+        }
+
+
+
+        //-------------------CURD OPERATIONS------------------------
+
+                                       //Get all Invoices
+     public List<Invoice> GetAllInvoices()
+        {
+            return _dbContext.Invoices.ToList();
         }
     }
 }
