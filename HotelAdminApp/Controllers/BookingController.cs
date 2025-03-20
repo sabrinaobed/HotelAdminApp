@@ -22,7 +22,20 @@ namespace HotelAdminApp.Controllers
         //Get all bookings
         public void GetAllBookings()
         {
+            Console.Clear();
+            var bookings = _bookingService.GetAllBookings();
 
+            if(bookings.Count == 0)
+            {
+                Console.WriteLine("No bookings found");
+                return;
+            }
+
+            Console.WriteLine("\n List of Bookings:  \n");
+            foreach(var booking in bookings)
+            {
+                Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
+            }
         }
     }
 }
