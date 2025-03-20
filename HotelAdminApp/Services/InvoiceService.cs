@@ -31,6 +31,12 @@ namespace HotelAdminApp.Services
         }
 
 
+
+
+
+
+
+
                                  //Get a specific invoice by its ID  
 
         public Invoice? GetInvoiceById(int id)
@@ -40,6 +46,12 @@ namespace HotelAdminApp.Services
                 .ThenInclude(b => b.Customer)// then include cutomer related to the booking
                 .FirstOrDefault(i => i.InvoiceId == id);//searches  a invoice by its PK, if object found its fine other ,? represents its null otherwise.
         }
+
+
+
+
+
+
 
 
                                   //Mark an invoice as paid /Update
@@ -59,7 +71,11 @@ namespace HotelAdminApp.Services
 
 
 
-        //Cancel Booking if invocie is overdue
+
+
+
+
+                                                       //Cancel Booking if invocie is overdue
         public void CancelBookingIfInvoiceOverDue()
         {
             var today = DateTime.Today;
