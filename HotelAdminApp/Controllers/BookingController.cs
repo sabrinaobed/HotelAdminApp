@@ -130,5 +130,62 @@ namespace HotelAdminApp.Controllers
 
 
         }
+
+
+
+
+
+        //Update a booking
+        public void UpdateBooking()
+        {
+            Console.WriteLine("Enter Booking ID: ");
+            if(!int.TryParse(Console.ReadLine(), out int bookingId))
+            {
+                var booking = _bookingService.GetBookingById(bookingId);
+                if(booking == null)
+                {
+                    Console.WriteLine("Booking not found.");
+                    return;
+                }
+
+
+                Console.WriteLine($"Updating Booking ID: {booking.BookingId}");
+
+                Console.Write("Enter new Start Date(YYYY-MM-DD): ");
+                string startInput = Console.ReadLine();
+                if(!string.IsNullOrWhiteSpace(startInput) && DateTime.TryParse(startInput,out DateTime newStartDate) && newStartDate >= DateTime.Today)
+                {
+                    booking.StartDate = newStartDate;
+                }
+
+
+
+                Console.Write("Enter new End Date(YYYY-MM-DD): ");
+                string endInput = Console.ReadLine();
+                if(!string.IsNullOrWhiteSpace(endInput) && DateTime.TryParse(endInput,out DateTime newEndDate) && newEndDate > booking.StartDate)
+                {
+                    booking.EndDate = newEndDate;
+                }
+
+
+                Console.WriteLine("Enter new number of guests: ");
+                string guestsInput = Console.ReadLine();
+                if (!int.TryParse(guestsInput, out int newGuests) && newGuests > 0)
+                {
+                    booking.NumberOfGuests = newGuests;
+                }
+
+                _bookingService.UpdateBooking(booking);
+                Console.WriteLine("Booking updated succesfully!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid Input");
+            }
+
+            
+        }
+
+
     }
 }
