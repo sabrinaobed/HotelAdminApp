@@ -187,5 +187,40 @@ namespace HotelAdminApp.Controllers
         }
 
 
+
+
+
+        //Delete a booking
+        public void DeleteBooking()
+        {
+            Console.WriteLine("Enter booking ID: ");
+            if(int.TryParse(Console.ReadLine(),out int bookingId))
+            {
+                var booking = _bookingService.GetBookingById(bookingId);
+                if (booking == null)
+                {
+                    Console.WriteLine("Booking not found.");
+                    return;
+                }
+
+                Console.WriteLine($"Are you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no)");
+                string confirmation = Console.ReadLine()?.ToLower();
+                if (confirmation == "yes")
+                {
+                    _bookingService.DeleteBooking(bookingId);
+                    Console.WriteLine("Booking cancelled successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Booking not cancelled.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+            }
+        }
+
+
     }
 }
