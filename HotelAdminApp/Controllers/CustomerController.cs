@@ -1,4 +1,5 @@
 ﻿using HotelAdminApp.Services;
+using HotelAdminApp.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,52 @@ namespace HotelAdminApp.Controllers
             {
                 Console.WriteLine("Invalid Customer ID. ");
             }
+        }
+
+
+
+
+
+
+
+        //Add a new customer
+        public void AddCustomer()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter Customer Name: ");
+            string name = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Customer name cannot be empty");
+                return;
+            }
+
+
+
+            Console.WriteLine("Enter Customer Email: ");
+            string email = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+            {
+                Console.WriteLine("Invalid email format.");
+                return;
+            }
+
+
+            Console.WriteLine("Enter Customer Phone Number: ");
+            string phoneNumber = Console.ReadLine();
+            
+            var customer = new Customer
+            {
+                Name = name,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+
+            _customerService.AddCustomer(customer);
+            Console.WriteLine("Customer added successfully");
+
+
+
         }
 
     }
