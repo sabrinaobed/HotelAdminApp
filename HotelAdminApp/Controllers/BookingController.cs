@@ -37,5 +37,34 @@ namespace HotelAdminApp.Controllers
                 Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
             }
         }
+
+
+
+
+
+
+
+        //Get booking by ID
+        public void GetBookingById(int id)
+        {
+            Console.WriteLine("Enter Booking ID: ");
+            if(int.TryParse(Console.ReadLine(), out int bookingId))
+            {
+                var booking = _bookingService.GetBookingById(bookingId);
+                if(booking != null)
+                {
+                    Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
+
+                }
+                else
+                {
+                    Console.WriteLine("Booking not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Inavlid ID. ");
+            }
+        }
     }
 }
