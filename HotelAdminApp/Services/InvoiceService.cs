@@ -28,5 +28,14 @@ namespace HotelAdminApp.Services
         {
             return _dbContext.Invoices.ToList();
         }
+
+
+                                 //Get a specific invoice by its ID  
+
+        public Invoice? GetInvoiceById(int id)
+        {
+            return _dbContext.Invoices.Find(id);//searches  an invoice by its PK, if object found its fine other ,? represents its null otherwise.
+
+        }
     }
 }
