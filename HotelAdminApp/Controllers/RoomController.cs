@@ -1,4 +1,5 @@
 ﻿using HotelAdminApp.Services;
+using HotelAdminApp.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,70 @@ namespace HotelAdminApp.Controllers
             }
 
         }
+
+
+
+
+
+        //Add a new room
+        public void AddRoom()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter Room Number: ");
+            string roomNumber = Console.ReadLine();
+
+            Console.WriteLine("Enter Room Type: ");
+            string roomType = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(roomType))
+            {
+                Console.WriteLine("Room type cannot be empty");
+                return;
+            }
+
+
+            Console.WriteLine("Enter Capacity: ");
+            if(!int.TryParse(Console.ReadLine(), out int capacity) || capacity <= 0)
+            {
+                Console.WriteLine("Invalid capacity.");
+                return;
+            }
+
+
+            Console.WriteLine("Enter Price Per night: ");
+            if(!decimal.TryParse(Console.ReadLine(), out decimal price) || price <= 0)
+            {
+                Console.WriteLine("Invalid price.");
+                return;
+            }
+
+
+            Console.WriteLine("Enter Extra Beds: ");
+            if(!int.TryParse(Console.ReadLine(), out int extraBeds) || extraBeds < 0)
+            {
+                extraBeds = 0;
+            }
+
+
+            _roomService.AddRoom(new Room
+            {
+                RoomNumber = roomNumber,
+                RoomType = roomType,
+                Capacity = capacity,
+                PricePerNight = price,
+                ExtraBeds = extraBeds
+            });
+
+            Console.WriteLine("Room added successfully!");
+           
+
+        }
+
+
+
+
+
+
+
 
 
 
