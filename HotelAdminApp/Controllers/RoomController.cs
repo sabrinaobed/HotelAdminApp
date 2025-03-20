@@ -14,7 +14,7 @@ namespace HotelAdminApp.Controllers
         private readonly RoomService _roomService; //created its class variable
 
         //this constructor intializes room service via DI
-        public RoomController (RoomService roomService)
+        public RoomController(RoomService roomService)
         {
             _roomService = roomService;
         }
@@ -32,7 +32,7 @@ namespace HotelAdminApp.Controllers
             }
 
             Console.WriteLine("\n List of Available Rooms: \n");
-            foreach(var room in rooms)
+            foreach (var room in rooms)
             {
                 Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
 
@@ -47,10 +47,10 @@ namespace HotelAdminApp.Controllers
         public void GetRoomById(int id)
         {
             Console.Write("Enter Room ID: ");
-            if(int.TryParse(Console.ReadLine(), out int roomId))
+            if (int.TryParse(Console.ReadLine(), out int roomId))
             {
                 var room = _roomService.GetRoomById(roomId);
-                if(room == null)
+                if (room == null)
                 {
                     Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
                 }
@@ -79,7 +79,7 @@ namespace HotelAdminApp.Controllers
 
             Console.WriteLine("Enter Room Type: ");
             string roomType = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(roomType))
+            if (string.IsNullOrWhiteSpace(roomType))
             {
                 Console.WriteLine("Room type cannot be empty");
                 return;
@@ -87,7 +87,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.WriteLine("Enter Capacity: ");
-            if(!int.TryParse(Console.ReadLine(), out int capacity) || capacity <= 0)
+            if (!int.TryParse(Console.ReadLine(), out int capacity) || capacity <= 0)
             {
                 Console.WriteLine("Invalid capacity.");
                 return;
@@ -95,7 +95,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.WriteLine("Enter Price Per night: ");
-            if(!decimal.TryParse(Console.ReadLine(), out decimal price) || price <= 0)
+            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price <= 0)
             {
                 Console.WriteLine("Invalid price.");
                 return;
@@ -103,7 +103,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.WriteLine("Enter Extra Beds: ");
-            if(!int.TryParse(Console.ReadLine(), out int extraBeds) || extraBeds < 0)
+            if (!int.TryParse(Console.ReadLine(), out int extraBeds) || extraBeds < 0)
             {
                 extraBeds = 0;
             }
@@ -119,7 +119,7 @@ namespace HotelAdminApp.Controllers
             });
 
             Console.WriteLine("Room added successfully!");
-           
+
 
         }
 
@@ -141,18 +141,18 @@ namespace HotelAdminApp.Controllers
 
                 Console.WriteLine($"Updating Room {room.RoomNumber}\n");
 
-                Console.WriteLine("Enter new Room Type: ");
+                Console.Write("Enter new Room Type: ");
                 string input = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(input))
                     room.RoomType = input;
 
 
-                Console.WriteLine("Enter new Capacity: ");
+                Console.Write("Enter new Capacity: ");
                 if (int.TryParse(Console.ReadLine(), out int newCapacity) && newCapacity > 0)
                     room.Capacity = newCapacity;
 
 
-                Console.WriteLine("Enter new Price Per Night: ");
+                Console.Write("Enter new Price Per Night: ");
                 if (decimal.TryParse(Console.ReadLine(), out decimal newPrice) && newPrice > 0)
                     room.PricePerNight = newPrice;
 
@@ -174,6 +174,31 @@ namespace HotelAdminApp.Controllers
 
         //Delete a room
 
+        public void DeleteRoom()
+        {
+            Console.WriteLine("Enter Room ID: ");
+            if (int.TryParse(Console.ReadLine(), out int roomId))
+            {
+                var room = _roomService.GetRoomById(roomId);
+                if (room == null)
+                {
+                    Console.WriteLine("Room not found");
+                    return;
+                }
 
+                Console.Write($"Are you sure you want to delete Room {room.RoomNumber}? (yes/no: )");
+                string confirmation = Console.ReadLine()?.ToLower();
+
+                if (confirmation == "yes")
+                {
+                    _roomService.DeleteRoom(roomId);
+                    Console.WriteLine("Room deleted successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Input");
+                }
+            }
+        }
     }
 }
