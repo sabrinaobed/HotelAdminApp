@@ -22,6 +22,25 @@ namespace HotelAdminApp.Controllers
         public void GetAllRooms()
         {
             Console.Clear();
+            var rooms = _roomService.GetAllRooms();
+            if (rooms.Count == 0)
+            {
+                Console.WriteLine("No rooms found");
+                return;
+            }
+
+            Console.WriteLine("\n List of Available Rooms: \n");
+            foreach(var room in rooms)
+            {
+                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+
+            }
+
         }
+
+
+
+
+
     }
 }
