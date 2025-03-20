@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace HotelAdminApp.Controllers
 {
@@ -123,14 +124,54 @@ namespace HotelAdminApp.Controllers
         }
 
 
+        //Update a room
+
+        public void UpdateRoom()
+        {
+            Console.WriteLine("Enter Room ID: ");
+            if (int.TryParse(Console.ReadLine(), out int roomId))
+            {
+                var room = _roomService.GetRoomById(roomId);
+                if (room == null)
+                {
+                    Console.WriteLine("Room not found");
+                    return;
+                }
+
+
+                Console.WriteLine($"Updating Room {room.RoomNumber}\n");
+
+                Console.WriteLine("Enter new Room Type: ");
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                    room.RoomType = input;
+
+
+                Console.WriteLine("Enter new Capacity: ");
+                if (int.TryParse(Console.ReadLine(), out int newCapacity) && newCapacity > 0)
+                    room.Capacity = newCapacity;
+
+
+                Console.WriteLine("Enter new Price Per Night: ");
+                if (decimal.TryParse(Console.ReadLine(), out decimal newPrice) && newPrice > 0)
+                    room.PricePerNight = newPrice;
+
+
+                _roomService.UpdateRoom(room);
+                Console.WriteLine("Room updated successfully!");
+
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+            }
 
 
 
 
 
 
-
-
+        }
 
 
     }
