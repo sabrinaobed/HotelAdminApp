@@ -154,5 +154,42 @@ namespace HotelAdminApp.Controllers
             }
         }
 
-    }
+
+
+
+
+
+
+        //Delete a customer
+        public void DeleteCustomer()
+        {
+            Console.WriteLine("Enter Customer ID:  ");
+            if(int.TryParse(Console.ReadLine(),out int customerId))
+            {
+                var customer = _customerService.GetCustomerById(customerId);
+                if(customer == null)
+                {
+                    Console.WriteLine("Customer not found");
+                    return;
+                }
+
+                Console.WriteLine($"Are you sure you want to delte {customer.Name}? (yes/no)");
+                string confirmation = Console.ReadLine();
+
+                if(confirmation == "yes")
+                {
+                        _customerService.DeleteCustomer(customerId);
+                        Console.WriteLine("Customer deleted successfully!");
+                }
+                    else
+                    {
+                        Console.WriteLine("Invalid Input");
+                    }
+            }
+
+         }
+                
+     }
+
 }
+
