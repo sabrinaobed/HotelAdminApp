@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelAdminApp.Controllers
 {
-    class CustomerController
+    public  class CustomerController
     {
     }
 }
