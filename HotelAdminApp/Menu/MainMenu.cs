@@ -98,8 +98,6 @@ namespace HotelAdminApp.Menu
                 {
                     case "1":
                         _roomController.GetAllRooms();
-                        Console.WriteLine("\n Updated Room List: ");
-                        _roomController.GetAllRooms();
                         break;
                     case "2":
                         _roomController.AddRoom();

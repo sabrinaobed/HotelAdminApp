@@ -31,16 +31,14 @@ namespace HotelAdminApp.Controllers
             }
             else
             {
-                Console.WriteLine("\n List of all Rooms: \n");
+                Console.WriteLine("\n List of all Rooms:\n");
                 foreach (var room in rooms)
                 {
-                    Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+                    Console.WriteLine($"ID: {room.RoomId},  RoomNumber: {room.RoomNumber},  RoomType: {room.RoomType},  Capacity: {room.Capacity},  PricePerNight: {room.PricePerNight}SEK");
                 }
             }
 
-            // Add this line to pause and let user see the output
-            Console.WriteLine("\nPress Enter to continue...");
-            Console.ReadLine();
+           
         }
 
 
@@ -56,7 +54,7 @@ namespace HotelAdminApp.Controllers
                 var room = _roomService.GetRoomById(roomId);
                 if (room == null)
                 {
-                    Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+                    Console.WriteLine($"ID: {room.RoomId},  RoomNumber: {room.RoomNumber},  RoomType: {room.RoomType}, Capacity: {room.Capacity},  PricePerNight: {room.PricePerNight}SEK");
                 }
                 else
                 {
@@ -83,7 +81,7 @@ namespace HotelAdminApp.Controllers
             var allRoomsListBeforeAddition = _roomService.GetAllRooms();
             foreach (var room in allRoomsListBeforeAddition)
             {
-                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+                Console.WriteLine($"ID: {room.RoomId},  RoomNumber: {room.RoomNumber},  RoomType: {room.RoomType},  Capacity: {room.Capacity},  PricePerNight: {room.PricePerNight}SEK");
             }
 
             //ADD DETAILS FOR NEW ROOM
@@ -161,11 +159,17 @@ namespace HotelAdminApp.Controllers
         }
 
 
-        //Update a room
 
+
+
+
+        //Update Room
         public void UpdateRoom()
         {
-            Console.WriteLine("Enter Room ID: ");
+            Console.Clear();
+            GetAllRooms(); //Show the list before updating a room
+
+            Console.Write("\nEnter Room ID to update: ");
             if (int.TryParse(Console.ReadLine(), out int roomId))
             {
                 var room = _roomService.GetRoomById(roomId);
@@ -175,35 +179,44 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-
-                Console.WriteLine($"Updating Room {room.RoomNumber}\n");
+                Console.WriteLine($"\nUpdating Room Number: {room.RoomNumber}\n");
 
                 Console.Write("Enter new Room Type: ");
                 string input = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(input))
                     room.RoomType = input;
 
-
                 Console.Write("Enter new Capacity: ");
-                if (int.TryParse(Console.ReadLine(), out int newCapacity) && newCapacity > 0)
+                string capacityInput = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(capacityInput) && int.TryParse(capacityInput, out int newCapacity) && newCapacity > 0)
                     room.Capacity = newCapacity;
 
-
                 Console.Write("Enter new Price Per Night: ");
-                if (decimal.TryParse(Console.ReadLine(), out decimal newPrice) && newPrice > 0)
+                string priceInput = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(priceInput) && decimal.TryParse(priceInput, out decimal newPrice) && newPrice > 0)
                     room.PricePerNight = newPrice;
 
-
                 _roomService.UpdateRoom(room);
-                Console.WriteLine("Room updated successfully!");
+                Console.WriteLine("\nRoom updated successfully!");
 
+                //Show updated list after modification with the updated room highlighted in green
+                Console.WriteLine("\nUpdated Room List:");
+                var updatedRooms = _roomService.GetAllRooms();
+
+                foreach (var r in updatedRooms)
+                {
+                    if (r.RoomId == room.RoomId)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green; //Highlight the updated room
+                    }
+                    Console.WriteLine($"ID: {r.RoomId},  RoomNumber: {r.RoomNumber},  RoomType: {r.RoomType},  Capacity: {r.Capacity},  PricePerNight: {r.PricePerNight}SEK");
+                    Console.ResetColor(); //Reset color back to default
+                }
             }
             else
             {
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Invalid input. Please enter a valid Room ID.");
             }
-
-
         }
 
 
@@ -213,6 +226,10 @@ namespace HotelAdminApp.Controllers
 
         public void DeleteRoom()
         {
+            Console.Clear();
+            GetAllRooms(); //Show the list before deleting a room
+
+
             Console.WriteLine("Enter Room ID: ");
             if (int.TryParse(Console.ReadLine(), out int roomId))
             {
@@ -223,19 +240,37 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.Write($"Are you sure you want to delete Room {room.RoomNumber}? (yes/no: )");
+                Console.Write($"\nAre you sure you want to delete Room {room.RoomNumber}? (yes/no): ");
                 string confirmation = Console.ReadLine()?.ToLower();
 
                 if (confirmation == "yes")
                 {
-                    _roomService.DeleteRoom(roomId);
-                    Console.WriteLine("Room deleted successfully!");
+                    try
+                    {
+                        _roomService.DeleteRoom(roomId);
+                        Console.WriteLine("\nRoom deleted successfully!");
+
+                        //Show updated list
+                        Console.WriteLine("\nUpdated Room List:");
+                        _roomService.GetAllRooms();
+                    }
+                    catch (InvalidOperationException ex) //Catch the error instead of crashing
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
+                        Console.ResetColor();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid Input");
+                    Console.WriteLine("\nDeletion canceled.");
                 }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid Room ID.");
             }
         }
     }
 }
+
