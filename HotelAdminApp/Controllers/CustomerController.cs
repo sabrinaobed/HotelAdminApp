@@ -156,66 +156,69 @@ namespace HotelAdminApp.Controllers
         //Update a customer
         public void UpdateCustomer()
         {
-
-
             Console.Clear();
-            GetAllCustomers();
+            GetAllCustomers(); //Show customers before updating
 
-
-            Console.WriteLine("Enter Customer ID: ");
-            if(int.TryParse(Console.ReadLine(), out int customerId))
+            Console.Write("\nEnter Customer ID: ");
+            if (int.TryParse(Console.ReadLine(), out int customerId))
             {
                 var customer = _customerService.GetCustomerById(customerId);
                 if (customer == null)
                 {
-                    Console.WriteLine("Customer not found");
+                    Console.WriteLine("Customer not found.");
                     return;
                 }
 
                 Console.WriteLine($"\nUpdating Customer: {customer.Name}");
 
-                Console.WriteLine("Enter new name:  ");
+                // Ask for new name and update if provided
+                Console.Write("Enter new name: ");
                 string newName = Console.ReadLine();
-                if(!string.IsNullOrWhiteSpace(newName))
+                if (!string.IsNullOrWhiteSpace(newName))
                     customer.Name = newName;
 
-
-                Console.WriteLine("Enter new email:  ");
+                // Ask for new email and validate format before updating
+                Console.Write("Enter new email: ");
                 string newEmail = Console.ReadLine();
-                if(!string.IsNullOrWhiteSpace(newEmail) && newEmail.Contains("@"))
+                if (!string.IsNullOrWhiteSpace(newEmail) && newEmail.Contains("@"))
                     customer.Email = newEmail;
 
-
-                Console.WriteLine("Enter new phone number:  ");
+                // Ask for new phone number and update if provided
+                Console.Write("Enter new phone number: ");
                 string newPhoneNumber = Console.ReadLine();
-                if(!string.IsNullOrWhiteSpace(newPhoneNumber))
+                if (!string.IsNullOrWhiteSpace(newPhoneNumber))
                     customer.PhoneNumber = newPhoneNumber;
 
+                // Save updated customer to database
                 _customerService.UpdateCustomer(customer);
-                Console.WriteLine("Customer updated successfully!");
+                Console.WriteLine("\nCustomer updated successfully!");
 
-
-                //Show updated list after changes
-                Console.WriteLine("\nUpdated Customer List: ");
+                // Show updated customer list correctly
+                Console.WriteLine("\nUpdated Customer List:");
                 var updatedCustomers = _customerService.GetAllCustomers();
 
                 foreach (var c in updatedCustomers)
                 {
-                    if(c.CustomerId == customer.CustomerId)
+                    // Correct condition to apply color only to updated customer
+                    if (c.CustomerId == customerId)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.ForegroundColor = ConsoleColor.Green; //Highlight updated customer
                     }
-                    Console.WriteLine($"ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
-                    Console.ResetColor();
 
+                    // Print each customer from `updatedCustomers` list instead of `customer`
+                    Console.WriteLine($"ID: {c.CustomerId},  CustomerName: {c.Name},  Email: {c.Email},  PhoneNumber: {c.PhoneNumber}");
+
+                    Console.ResetColor(); //Reset text color back to default
                 }
 
+               
             }
             else
             {
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Invalid input. Please enter a valid Customer ID.");
             }
         }
+
 
 
 
