@@ -139,12 +139,16 @@ namespace HotelAdminApp.Menu
                 switch (choice)
                 {
                     case "1":
+                        _customerController.GetAllCustomers();
                         break;
                     case "2":
+                        _customerController.AddCustomer();
                         break;
                     case "3":
+                        _customerController.UpdateCustomer();
                         break;
                     case "4":
+                           _customerController.DeleteCustomer();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
