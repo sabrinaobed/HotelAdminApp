@@ -44,7 +44,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("4. Manage Invoices");
                 Console.WriteLine("0. Exit");
 
-                Console.Write("Select an option to proceed: \n");
+                Console.Write("\nSelect an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
@@ -63,10 +63,11 @@ namespace HotelAdminApp.Menu
                           InvoiceMenu();
                         break;
                     case "0":
-                        Console.WriteLine("Exiting the app...");
+                        Console.WriteLine("Exiting the application...");
                         return;
                     default:
                         Console.WriteLine("Invalid choice!Choose the correct option...");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -89,13 +90,15 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("4. Delete a Room");
                 Console.WriteLine("0. Back to Main Menu");
 
-                Console.WriteLine("Select an option to proceed: \n");
+                Console.WriteLine("\nSelect an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
                 switch(choice)
                 {
                     case "1":
+                        _roomController.GetAllRooms();
+                        Console.WriteLine("\n Updated Room List: ");
                         _roomController.GetAllRooms();
                         break;
                     case "2":
@@ -112,8 +115,12 @@ namespace HotelAdminApp.Menu
                         return;
                     default:
                         Console.WriteLine("Invalid choice!Choose the correct option...");
+                        Console.ReadLine();
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
+
             }
 
         }

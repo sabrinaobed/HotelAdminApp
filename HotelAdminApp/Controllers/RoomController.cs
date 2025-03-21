@@ -21,24 +21,28 @@ namespace HotelAdminApp.Controllers
 
 
         //Get all Rooms
+
         public void GetAllRooms()
         {
-            Console.Clear();
             var rooms = _roomService.GetAllRooms();
             if (rooms.Count == 0)
             {
                 Console.WriteLine("No rooms found");
-                return;
             }
-
-            Console.WriteLine("\n List of Available Rooms: \n");
-            foreach (var room in rooms)
+            else
             {
-                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType},Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
-
+                Console.WriteLine("\n List of all Rooms: \n");
+                foreach (var room in rooms)
+                {
+                    Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+                }
             }
 
+            // Add this line to pause and let user see the output
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
         }
+
 
 
 
@@ -74,6 +78,15 @@ namespace HotelAdminApp.Controllers
         public void AddRoom()
         {
             Console.Clear();
+            //Show the list before adding a new room
+            Console.WriteLine("\nCurrent Room List:");
+            var allRoomsListBeforeAddition = _roomService.GetAllRooms();
+            foreach (var room in allRoomsListBeforeAddition)
+            {
+                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+            }
+
+            //ADD DETAILS FOR NEW ROOM
             Console.WriteLine("Enter Room Number: ");
             string roomNumber = Console.ReadLine();
 
@@ -108,18 +121,42 @@ namespace HotelAdminApp.Controllers
                 extraBeds = 0;
             }
 
-
-            _roomService.AddRoom(new Room
+            //adding room using room service
+            Room newRoom = new Room
             {
                 RoomNumber = roomNumber,
                 RoomType = roomType,
                 Capacity = capacity,
                 PricePerNight = price,
                 ExtraBeds = extraBeds
-            });
+            };
 
-            Console.WriteLine("Room added successfully!");
+            _roomService.AddRoom(newRoom);
 
+
+            Console.WriteLine("\nRoom added successfully!");
+
+            //Fetch all rooms again
+            var allRooms = _roomService.GetAllRooms();
+
+            // Show updated list
+            Console.WriteLine("\nUpdated Room List:\n");
+
+            foreach (var room in allRooms)
+            {
+                // If this is the newly added room, show it in green
+                if (room.RoomNumber == newRoom.RoomNumber && room.RoomType == newRoom.RoomType && room.Capacity == newRoom.Capacity)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+
+                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, PricePerNight: {room.PricePerNight}");
+
+                // Reset console color back to default
+                Console.ResetColor();
+            }
+
+           
 
         }
 
