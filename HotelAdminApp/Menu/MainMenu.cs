@@ -51,12 +51,16 @@ namespace HotelAdminApp.Menu
                 switch (choice)
                 {
                     case "1":
+                        RoomMenu();
                         break;
                     case "2":
+                        CustomerMenu();
                         break;
                     case "3":
+                        BookingMenu();
                         break;
                     case "4":
+                          InvoiceMenu();
                         break;
                     case "0":
                         Console.WriteLine("Exiting the app...");
