@@ -96,12 +96,16 @@ namespace HotelAdminApp.Menu
                 switch(choice)
                 {
                     case "1":
+                        _roomController.GetAllRooms();
                         break;
                     case "2":
+                        _roomController.AddRoom();
                         break;
                     case "3":
+                        _roomController.UpdateRoom();
                         break;
                     case "4":
+                        _roomController.DeleteRoom();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
