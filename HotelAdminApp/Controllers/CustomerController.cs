@@ -26,13 +26,19 @@ namespace HotelAdminApp.Controllers
             var customers = _customerService.GetAllCustomers();
 
             if (customers.Count == 0)
+            
             {
-                Console.WriteLine("\nList of all Customers\n");
-                foreach(var customer in customers)
-                {
-                    Console.WriteLine($" ID: {customer.CustomerId}, CustomerName: {customer.Name}, Email: {customer.Email}, PhoneNumber: {customer.PhoneNumber}");
-                }
+                    Console.WriteLine("No customers found");
             }
+            else
+            {
+                    foreach (var customer in customers)
+                    {
+                        Console.WriteLine($" ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
+                    }
+            }
+                    
+            
         }
 
 
@@ -73,6 +79,16 @@ namespace HotelAdminApp.Controllers
         public void AddCustomer()
         {
             Console.Clear();
+            Console.WriteLine("\n Current Customer List: ");
+            var allCustomersBeforeAddition = _customerService.GetAllCustomers();
+            foreach(var customer in allCustomersBeforeAddition)
+            {
+                Console.WriteLine($"ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
+            }
+
+
+
+            //ADD DETAILS FOR NEW CUSTOMER
             Console.WriteLine("Enter Customer Name: ");
             string name = Console.ReadLine();
             if(string.IsNullOrWhiteSpace(name))
@@ -95,15 +111,40 @@ namespace HotelAdminApp.Controllers
             Console.WriteLine("Enter Customer Phone Number: ");
             string phoneNumber = Console.ReadLine();
             
-            var customer = new Customer
+
+            //Adding new customer using customer service
+            Customer newCustomer = new Customer
             {
                 Name = name,
                 Email = email,
                 PhoneNumber = phoneNumber
             };
 
-            _customerService.AddCustomer(customer);
+            _customerService.AddCustomer(newCustomer);
+
+
             Console.WriteLine("Customer added successfully");
+
+            //Fetch all rooms again
+            var allCustomers = _customerService.GetAllCustomers();
+
+            //Show updated List
+            Console.WriteLine("\n Updated Customer List: ");
+
+            foreach(var customer in allCustomers)
+            {
+              if(customer.Name == newCustomer.Name && customer.Email == newCustomer.Email && customer.PhoneNumber == newCustomer.PhoneNumber)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+
+                Console.WriteLine($"ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
+
+
+                //reset color
+                Console.ResetColor();
+            }
+
 
 
 
@@ -115,6 +156,12 @@ namespace HotelAdminApp.Controllers
         //Update a customer
         public void UpdateCustomer()
         {
+
+
+            Console.Clear();
+            GetAllCustomers();
+
+
             Console.WriteLine("Enter Customer ID: ");
             if(int.TryParse(Console.ReadLine(), out int customerId))
             {
@@ -125,7 +172,7 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.WriteLine($"Updating Customer: {customer.Name}");
+                Console.WriteLine($"\nUpdating Customer: {customer.Name}");
 
                 Console.WriteLine("Enter new name:  ");
                 string newName = Console.ReadLine();
@@ -147,6 +194,22 @@ namespace HotelAdminApp.Controllers
                 _customerService.UpdateCustomer(customer);
                 Console.WriteLine("Customer updated successfully!");
 
+
+                //Show updated list after changes
+                Console.WriteLine("\nUpdated Customer List: ");
+                var updatedCustomers = _customerService.GetAllCustomers();
+
+                foreach (var c in updatedCustomers)
+                {
+                    if(c.CustomerId == customer.CustomerId)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    Console.WriteLine($"ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
+                    Console.ResetColor();
+
+                }
+
             }
             else
             {
@@ -163,6 +226,12 @@ namespace HotelAdminApp.Controllers
         //Delete a customer
         public void DeleteCustomer()
         {
+
+            Console.Clear();
+            GetAllCustomers();
+
+
+
             Console.WriteLine("Enter Customer ID:  ");
             if(int.TryParse(Console.ReadLine(),out int customerId))
             {
@@ -173,23 +242,42 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.WriteLine($"Are you sure you want to delte {customer.Name}? (yes/no)");
+                Console.WriteLine($"Are you sure you want to delete {customer.Name}? (yes/no)");
                 string confirmation = Console.ReadLine();
 
-                if(confirmation == "yes")
+                if (confirmation == "yes")
                 {
-                        _customerService.DeleteCustomer(customerId);
-                        Console.WriteLine("Customer deleted successfully!");
-                }
-                    else
+                    try
                     {
-                        Console.WriteLine("Invalid Input");
+                        _customerService.DeleteCustomer(customerId);
+                        Console.WriteLine("\nRoom deleted successfully!");
+
+                        //Show updated list
+                        Console.WriteLine("\nUpdated Room List:");
+                        GetAllCustomers();
+                        Console.ReadLine();
                     }
+                    catch (InvalidOperationException ex) //Catch the error instead of crashing
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
+                        Console.ResetColor();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nDeletion canceled.");
+                }
             }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a valid Room ID.");
+            }
+        }
 
-         }
+    }
                 
-     }
-
 }
+
+
 

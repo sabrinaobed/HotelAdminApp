@@ -31,7 +31,7 @@ namespace HotelAdminApp.Controllers
             }
             else
             {
-                Console.WriteLine("\n List of all Rooms:\n");
+                Console.WriteLine("\nList of all Rooms:\n");
                 foreach (var room in rooms)
                 {
                     Console.WriteLine($"ID: {room.RoomId},  RoomNumber: {room.RoomNumber},  RoomType: {room.RoomType},  Capacity: {room.Capacity},  PricePerNight: {room.PricePerNight}SEK");

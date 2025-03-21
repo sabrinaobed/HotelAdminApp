@@ -162,6 +162,8 @@ namespace HotelAdminApp.Menu
                         Console.WriteLine("Invalid option!Please try again with the correct option...");
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
 
             }
         }
