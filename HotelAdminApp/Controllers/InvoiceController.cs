@@ -2,6 +2,7 @@
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,11 @@ namespace HotelAdminApp.Controllers
 
 
 
+
+
+
+
+
         //Get invoice by ID
         public void GetInvoiceById(int id)
         {
@@ -63,6 +69,51 @@ namespace HotelAdminApp.Controllers
             {
                 Console.WriteLine("Invalid ID");
             }
+        }
+
+
+
+
+
+
+
+
+        //Mark an invoice as paid
+        public void MarkInvoicePaid()
+        {
+            Console.WriteLine("Enter Invoice ID to mark as paid: ");
+            if(int.TryParse(Console.ReadLine(),out int invoiceId))
+            {
+                var invoice = _invoiceService.GetInvoiceById(invoiceId);
+                if (invoice == null)
+                {
+                    Console.WriteLine("Invoice not found. ");
+                    return;
+                }
+
+
+                if(invoice.IsPaid)
+                {
+                    Console.WriteLine("Invoice is already marked as paid. ");
+                    return;
+                }
+
+                try
+                {
+                    _invoiceService.MarkInvoicePaid(invoiceId);
+                    Console.WriteLine("Invoice marked as paid successfully!");
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Error marking invoice as paid: {ex.Message}");
+                }
+                
+            }
+            else
+            {
+                Console.WriteLine("Invalid input.");
+            }
+
         }
     }
 }
