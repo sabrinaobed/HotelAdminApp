@@ -148,7 +148,7 @@ namespace HotelAdminApp.Menu
                         _customerController.UpdateCustomer();
                         break;
                     case "4":
-                           _customerController.DeleteCustomer();
+                         _customerController.DeleteCustomer();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
@@ -182,12 +182,16 @@ namespace HotelAdminApp.Menu
                 switch (choice)
                 {
                     case "1":
+                        _bookingController.GetAllBookings();
                         break;
                     case "2":
+                        _bookingController.AddBooking();
                         break;
                     case "3":
+                        _bookingController.UpdateBooking();
                         break;
                     case "4":
+                        _bookingController.DeleteBooking();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
