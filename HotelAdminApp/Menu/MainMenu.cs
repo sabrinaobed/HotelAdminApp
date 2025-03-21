@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HotelAdminApp.Controllers;
+using HotelAdminApp.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,26 @@ namespace HotelAdminApp.Menu
     public class MainMenu
     {
 
+        //used for DI and ensures all controllers have access to services for handling business logic
+
+        private readonly RoomController _roomController;
+        private readonly CustomerController _customerController;
+        private readonly BookingController _bookingController;
+        private readonly InvoiceController _invoiceController;
+
+
+
+        //Constructor to initialize the controllers via DI
+        public MainMenu(RoomController roomController, CustomerController customerController, BookingController bookingController, InvoiceController invoiceController)
+        {
+            _roomController = roomController;
+            _customerController = customerController;
+            _bookingController = bookingController;
+            _invoiceController = invoiceController;
+        }    
+        
+
+        
         //This method is to show main menu and runs in loop until user chooses to exit.
         public void ShowMainMenu()
         {
