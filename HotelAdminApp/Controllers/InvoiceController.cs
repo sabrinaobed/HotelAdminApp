@@ -43,5 +43,26 @@ namespace HotelAdminApp.Controllers
 
 
         //Get invoice by ID
+        public void GetInvoiceById(int id)
+        {
+            Console.WriteLine("Enter Invoice ID: ");
+            if(int.TryParse(Console.ReadLine(),out int invoiceId))
+            {
+                var invoice = _invoiceService.GetInvoiceById(invoiceId);
+                if(invoice != null)
+                {
+                    Console.WriteLine($"Invoice ID: {invoice.InvoiceId},Booking ID: {invoice.BookingId}, Amount: {invoice.TotalAmount}, Paid: {invoice.IsPaid}, Due: {invoice.DueDate}");
+
+                }
+                else
+                {
+                    Console.WriteLine("Invoice not found ");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID");
+            }
+        }
     }
 }
