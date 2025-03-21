@@ -29,14 +29,19 @@ namespace HotelAdminApp.Controllers
             if(bookings.Count == 0)
             {
                 Console.WriteLine("No bookings found");
-                return;
+                
+            }
+            else
+            {
+                Console.WriteLine("\n List of Bookings:  \n");
+                foreach (var booking in bookings)
+                {
+                    Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
+                }
+
             }
 
-            Console.WriteLine("\n List of Bookings:  \n");
-            foreach(var booking in bookings)
-            {
-                Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
-            }
+            
         }
 
 
@@ -77,6 +82,18 @@ namespace HotelAdminApp.Controllers
         public void AddBooking()
         {
             Console.Clear();
+            Console.WriteLine("\nCurrent Booking List: ");
+            var allBookingsBeforeAddition = _bookingService.GetAllBookings();
+            foreach(var bookings in allBookingsBeforeAddition)
+            {
+                Console.WriteLine($"Booking ID: {bookings.BookingId}, RoomNumber: {bookings.Room.RoomNumber}, CustomerName: {bookings.Customer.Name}, StartDate: {bookings.StartDate}, EndDate: {bookings.EndDate} ");
+
+            }
+
+
+
+            //ADD DETAILS FOR NEW BOOKING
+
             Console.Write("Enter Customer ID: ");
             if(!int.TryParse(Console.ReadLine(), out int customerId))
             {
@@ -116,7 +133,9 @@ namespace HotelAdminApp.Controllers
                 return;
             }
 
-            var booking = new Booking
+
+            //adding booking using booking service
+           Booking newBooking = new Booking
             {
                 CustomerId = customerId,
                 RoomId = roomId,
@@ -125,8 +144,32 @@ namespace HotelAdminApp.Controllers
                 NumberOfGuests = numberOfGuests
             };
 
-            _bookingService.AddBooking(booking);
+            _bookingService.AddBooking(newBooking);
             Console.WriteLine("Booking added successfully.");
+
+            //Fetch all bookings again
+            var allBookings = _bookingService.GetAllBookings();
+
+            //Show updated bookings
+            Console.WriteLine("\nUpdated Booking List: ");
+            foreach (var booking in allBookings)
+            {
+                if(booking.RoomId == newBooking.RoomId &&
+                    booking.CustomerId == newBooking.CustomerId &&
+                    booking.StartDate == newBooking.StartDate &&
+                    booking.EndDate == newBooking.EndDate &&
+                    booking.NumberOfGuests == newBooking.NumberOfGuests)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                Console.WriteLine($"Booking ID: {booking.BookingId}, RoomNumber: {booking.Room.RoomNumber}, CustomerName: {booking.Customer.Name}, StartDate: {booking.StartDate}, EndDate: {booking.EndDate} ");
+
+                //reset color
+                Console.ResetColor();   
+
+
+
+            }
 
 
         }
