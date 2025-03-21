@@ -218,6 +218,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("---- Invoice Management Menu ----\n");
                 Console.WriteLine("1. Show All Invoices");
                 Console.WriteLine("2. Update Invoice as Paid");
+                Console.WriteLine("3. Cancel Overdue Bookings");
                 Console.WriteLine("0. Back to Main Menu");
 
                 Console.WriteLine("Select an option to proceed: ");
@@ -227,8 +228,13 @@ namespace HotelAdminApp.Menu
                 switch(choice)
                 {
                     case "1":
+                        _invoiceController.GetAllInvoices();
                         break;
                     case "2":
+                        _invoiceController.MarkInvoicePaid();
+                        break;
+                    case "3":
+                        _invoiceController.CancelOverdueBookings();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu.");
