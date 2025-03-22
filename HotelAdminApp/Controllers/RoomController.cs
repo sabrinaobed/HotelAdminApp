@@ -294,6 +294,52 @@ namespace HotelAdminApp.Controllers
                 Console.WriteLine("Invalid input. Please enter a valid Room ID.");
             }
         }
+
+
+        //Search for avaiable rooms
+        public void SearchAvailableRooms()
+        {
+            Console.Clear();
+            Console.WriteLine("\nSearch for Avaiable Rooms accorsing to number of guests and within a specific date range: ");
+
+            Console.WriteLine("Enter Start Date(YYYY-MM-DD): ");
+            if(!DateTime.TryParse(Console.ReadLine(),out DateTime startDate))
+            {
+                Console.WriteLine("Invalid start date");
+                return;
+            }
+
+            Console.WriteLine("Enter End Date(YYYY-MM-DD): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+            {
+                Console.WriteLine("Invalid end date");
+                return;
+            }
+
+
+            Console.WriteLine("Enter number of guests: ");
+            if(!int.TryParse(Console.ReadLine(), out int numberOfGuests) || numberOfGuests <= 0)
+            {
+                Console.WriteLine("Invalid number of guests");
+                return;
+            }
+
+
+            var avaiableRooms = _roomService.SearchAvailableRooms(startDate,endDate,numberOfGuests);
+
+            Console.WriteLine("\n Available Rooms: ");
+            if(!avaiableRooms.Any())
+            {
+                Console.WriteLine("No rooms available for the given criteria");
+                return;
+            }
+
+            foreach (var room in avaiableRooms)
+            {
+                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, Type: {room.RoomType}, Capacity: {room.Capacity}, Price: {room.PricePerNight} SEK");
+            }
+
+        }
     }
 }
 
