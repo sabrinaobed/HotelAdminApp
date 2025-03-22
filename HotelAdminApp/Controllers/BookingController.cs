@@ -170,7 +170,8 @@ namespace HotelAdminApp.Controllers
             };
 
             _bookingService.AddBooking(newBooking);
-            Console.WriteLine("Booking added successfully.");
+            Console.WriteLine("Booking and invoice created successfully.");
+            Console.WriteLine("Invoice status: UNPAID(Due within 10 days).");
 
             //Fetch all bookings again
             var allBookings = _bookingService.GetAllBookings();

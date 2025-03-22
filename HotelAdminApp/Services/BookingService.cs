@@ -84,7 +84,25 @@ namespace HotelAdminApp.Services
                 throw new InvalidOperationException("Room is already booked for the given dates");
             }
 
+
             _dbContext.Bookings.Add(booking); //Add booking to DbSet
+            _dbContext.SaveChanges(); //Save changes to database
+
+            //automatically create invoice when booking is craeted
+            var room = _dbContext.Rooms.First(r => r.RoomId == booking.RoomId);
+            var totalDays= (booking.EndDate - booking.StartDate).Days;
+            var totalAmount = totalDays * room.PricePerNight;
+
+
+            var invoice = new Invoice
+            {
+                BookingId = booking.BookingId,
+                TotalAmount = totalAmount,
+                IsPaid = false,
+                DueDate = DateTime.Now,
+            };
+
+            _dbContext.Invoices.Add(invoice); //Add booking to DbSet
             _dbContext.SaveChanges(); //Save changes to database
 
         }
@@ -96,8 +114,8 @@ namespace HotelAdminApp.Services
 
 
 
-                                               //Update a booking with all valid attributes
-         
+        //Update a booking with all valid attributes
+
 
 
         public void UpdateBooking(Booking booking)
