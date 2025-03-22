@@ -212,7 +212,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.WriteLine("Enter Booking ID: ");
-            if(!int.TryParse(Console.ReadLine(), out int bookingId))
+            if(int.TryParse(Console.ReadLine(), out int bookingId))
             {
                 var booking = _bookingService.GetBookingById(bookingId);
                 if(booking == null)
@@ -299,7 +299,7 @@ namespace HotelAdminApp.Controllers
                 }
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"\n⚠️ This booking has an invoice. Deleting it will also delete the related invoice.");
+                Console.WriteLine($"\nThis booking has an invoice. Deleting it will also delete the related invoice.");
                 Console.ResetColor();
 
                 Console.Write($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no): ");
@@ -308,12 +308,12 @@ namespace HotelAdminApp.Controllers
                 {
                     _bookingService.DeleteBooking(bookingId);
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("✅ Booking and related invoice deleted successfully.");
+                    Console.WriteLine("Booking and related invoice deleted successfully.");
                     Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("❌ Booking not deleted.");
+                    Console.WriteLine("Booking not deleted.");
                 }
             }
             else
@@ -321,8 +321,7 @@ namespace HotelAdminApp.Controllers
                 Console.WriteLine("Invalid input");
             }
 
-            Console.WriteLine("\nPress Enter to continue...");
-            Console.ReadLine();
+         
         }
 
 
