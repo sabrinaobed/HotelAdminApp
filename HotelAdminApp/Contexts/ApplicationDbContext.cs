@@ -84,6 +84,10 @@ namespace HotelAdminApp.Contexts
             //Room Constraints
 
             modelBuilder.Entity<Room>()
+                .HasIndex(r => r.RoomNumber)
+                .IsUnique(); // This ensures RoomNumber is unique
+
+            modelBuilder.Entity<Room>()
                 .Property(r => r.RoomNumber)
                 .IsRequired()
                 .HasMaxLength(10);

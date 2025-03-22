@@ -50,20 +50,34 @@ namespace HotelAdminApp.Services
            {
                 throw new ArgumentNullException(nameof(room), "Room cannot be null.");
            }
+
+
+          // Check for duplicate RoomNumber
+            bool roomNumberExists = _dbContext.Rooms.Any(r => r.RoomNumber == room.RoomNumber);
+           if (roomNumberExists)
+                    throw new InvalidOperationException($"Room number '{room.RoomNumber}' already exists. Please enter a unique room number.");
+
+
+
             //validate room attributes
-           if(string.IsNullOrWhiteSpace(room.RoomNumber))
+            if (string.IsNullOrWhiteSpace(room.RoomNumber))
            {
                 throw new ArgumentException("Room number cannot be empty");
            }
+
+
            if(room.Capacity <= 0)
            {
            throw new ArgumentException("Room Capacity must be gretaer than 0");
            }
+
+
            if(room.PricePerNight <= 0)
            {
                 throw new ArgumentException("Room price must be greater than 0");
            }
 
+           
            _dbContext.Rooms.Add(room); //Add room to DbSet
            _dbContext.SaveChanges(); //Save changes to database
            }

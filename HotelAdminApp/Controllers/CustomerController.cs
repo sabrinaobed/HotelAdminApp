@@ -100,7 +100,7 @@ namespace HotelAdminApp.Controllers
 
 
 
-            Console.WriteLine("Enter Customer Email: ");
+            Console.WriteLine("Enter Customer Email(name@mail.com): ");
             string email = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
             {
@@ -173,19 +173,19 @@ namespace HotelAdminApp.Controllers
                 Console.WriteLine($"\nUpdating Customer: {customer.Name}");
 
                 // Ask for new name and update if provided
-                Console.Write("Enter new name: ");
+                Console.Write("Enter new name (Press enter to continue with same): ");
                 string newName = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(newName))
                     customer.Name = newName;
 
                 // Ask for new email and validate format before updating
-                Console.Write("Enter new email: ");
+                Console.Write("Enter new email (Press enter to continue with same): ");
                 string newEmail = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(newEmail) && newEmail.Contains("@"))
                     customer.Email = newEmail;
 
                 // Ask for new phone number and update if provided
-                Console.Write("Enter new phone number: ");
+                Console.Write("Enter new phone number (Press enter to continue with same): ");
                 string newPhoneNumber = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(newPhoneNumber))
                     customer.PhoneNumber = newPhoneNumber;
