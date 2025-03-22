@@ -29,13 +29,17 @@ namespace HotelAdminApp.Controllers
             if(invoices.Count == 0)
             {
                 Console.WriteLine("No invoices found");
-                return;
+                
             }
-            Console.WriteLine("\nList of Invoices: \n");
-            foreach( var invoice in invoices)
+            else
             {
-                Console.WriteLine($"Invoice ID: {invoice.InvoiceId},Booking ID: {invoice.BookingId}, Amount: {invoice.TotalAmount}, Paid: {invoice.IsPaid}, Due: {invoice.DueDate}");
+                foreach (var invoice in invoices)
+                {
+                    Console.WriteLine($"Invoice ID: {invoice.InvoiceId},Booking ID: {invoice.BookingId}, Amount: {invoice.TotalAmount}, Paid: {invoice.IsPaid}, Due: {invoice.DueDate}");
+                }
             }
+               
+            
         }
 
 

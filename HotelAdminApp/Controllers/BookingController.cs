@@ -181,6 +181,11 @@ namespace HotelAdminApp.Controllers
         //Update a booking
         public void UpdateBooking()
         {
+
+            Console.Clear();
+            GetAllBookings();
+
+
             Console.WriteLine("Enter Booking ID: ");
             if(!int.TryParse(Console.ReadLine(), out int bookingId))
             {
@@ -192,7 +197,9 @@ namespace HotelAdminApp.Controllers
                 }
 
 
-                Console.WriteLine($"Updating Booking ID: {booking.BookingId}");
+                Console.WriteLine($"\nUpdating Booking with ID: {booking.BookingId}");
+
+
 
                 Console.Write("Enter new Start Date(YYYY-MM-DD): ");
                 string startInput = Console.ReadLine();
@@ -218,8 +225,25 @@ namespace HotelAdminApp.Controllers
                     booking.NumberOfGuests = newGuests;
                 }
 
+
+
+
                 _bookingService.UpdateBooking(booking);
-                Console.WriteLine("Booking updated succesfully!");
+                Console.WriteLine("\nBooking updated succesfully!");
+
+                Console.WriteLine("\nUpdated Booking List: ");
+                var updatedBookings = _bookingService.GetAllBookings();
+
+                foreach(var b in updatedBookings)
+                {
+                    if (b.BookingId == booking.BookingId)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
+                    
+                    Console.WriteLine($"Booking ID: {b.BookingId}, RoomNumber: {b.Room.RoomNumber}, CustomerName: {b.Customer.Name}, StartDate: {b.StartDate}, EndDate: {b.EndDate} ");
+                    Console.ResetColor();
+                }
             }
             else
             {
@@ -236,6 +260,11 @@ namespace HotelAdminApp.Controllers
         //Delete a booking
         public void DeleteBooking()
         {
+
+            Console.Clear();
+            GetAllBookings();
+
+
             Console.WriteLine("Enter booking ID: ");
             if(int.TryParse(Console.ReadLine(),out int bookingId))
             {
@@ -246,21 +275,35 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.WriteLine($"Are you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no)");
+                Console.WriteLine($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no)");
                 string confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes")
                 {
-                    _bookingService.DeleteBooking(bookingId);
-                    Console.WriteLine("Booking cancelled successfully.");
+                    try
+                    {
+                        _bookingService.DeleteBooking(bookingId);
+                        Console.WriteLine("\nBooking deleted successfully!");
+
+                        //Show updated list
+                        Console.WriteLine("\nUpdated Booking List:");
+                        GetAllBookings();
+                        Console.ReadLine();
+                    }
+                    catch (InvalidOperationException ex) //Catch the error instead of crashing
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
+                        Console.ResetColor();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Booking not cancelled.");
+                    Console.WriteLine("\nDeletion canceled.");
                 }
             }
             else
             {
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Invalid input.Please enter a valid Booking ID.");
             }
         }
 

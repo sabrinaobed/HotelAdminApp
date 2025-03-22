@@ -246,7 +246,7 @@ namespace HotelAdminApp.Controllers
                 }
 
                 Console.WriteLine($"Are you sure you want to delete {customer.Name}? (yes/no)");
-                string confirmation = Console.ReadLine();
+                string confirmation = Console.ReadLine()?.ToLower();
 
                 if (confirmation == "yes")
                 {
