@@ -58,7 +58,7 @@ namespace HotelAdminApp.Data
         //Seed intial data
         public static void SeedData(ApplicationDbContext dbContext)
         {
-            Console.WriteLine("Checking if database has data...");
+          
 
             if (!IfAnyDataExists(dbContext)) // Check if data exists
             {
@@ -71,10 +71,9 @@ namespace HotelAdminApp.Data
 
                 Console.WriteLine("Seeding completed!");
             }
-            else
-            {
-                Console.WriteLine("Data already exists. Skipping seeding.");
-            }
+            
+         
+
         }
 
 

@@ -117,8 +117,10 @@ namespace HotelAdminApp.Services
 
         }
 
-
-
+        internal void AddRoom()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

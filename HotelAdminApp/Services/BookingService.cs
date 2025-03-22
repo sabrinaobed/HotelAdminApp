@@ -160,6 +160,8 @@ namespace HotelAdminApp.Services
                                                     //Delete a booking by its ID
    public void DeleteBooking(int id)
         {
+
+
             var booking = _dbContext.Bookings.Find(id);
             if (booking == null)
             {
