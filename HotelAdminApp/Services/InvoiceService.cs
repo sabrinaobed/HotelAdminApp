@@ -58,12 +58,22 @@ namespace HotelAdminApp.Services
         public void MarkInvoicePaid(int invoiceId)
         {
             var invoice = _dbContext.Invoices.Find(invoiceId);
+            //check if invoice exists
             if(invoice == null)
             {
                 throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
             }
 
+            //prevent marking already paid invoice
+            if(invoice.IsPaid)
+            {
+                throw new InvalidOperationException("This invoice is already marked paid.");
+            }
+
+            //Mark as paid
             invoice.IsPaid = true;
+
+            //save changes
             _dbContext.Invoices.Update(invoice);
             _dbContext.SaveChanges();
 
