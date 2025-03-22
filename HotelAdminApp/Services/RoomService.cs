@@ -131,6 +131,21 @@ namespace HotelAdminApp.Services
             _dbContext.SaveChanges();
         }
 
+        //Searxh for Aviable rooms 
+        public List<Room> SearchAvailableRooms(DateTime startDate, DateTime endDate, int numberOfGuests)
+        {
+            var bookedRooms = _dbContext.Bookings
+                  .Where(b => startDate < b.EndDate && endDate > b.StartDate)
+                  .Select(b => b.RoomId)
+                  .Distinct()
+                  .ToList();
+
+            return _dbContext.Rooms
+                .Where(r => !bookedRooms.Contains(r.RoomId) && r.Capacity >= numberOfGuests)
+                .ToList();
+
+
+        }
 
     }
 }
