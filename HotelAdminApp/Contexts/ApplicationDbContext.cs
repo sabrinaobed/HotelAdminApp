@@ -61,11 +61,12 @@ namespace HotelAdminApp.Contexts
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Define One-to-One relationship between Booking and Invoice
+            //Enable Cascade Delete from Booking → Invoice
             modelBuilder.Entity<Invoice>()
-            .HasOne(i => i.Booking)
-            .WithOne(b => b.Invoice)
-            .HasForeignKey<Invoice>(i => i.BookingId)
-            .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(i => i.Booking)
+                .WithOne(b => b.Invoice)
+                .HasForeignKey<Invoice>(i => i.BookingId)
+                .OnDelete(DeleteBehavior.Cascade); //Now invoice gets deleted automatically when booking is deleted
 
             //Adding fluent API Constraints
 

@@ -1,5 +1,6 @@
 ﻿using HotelAdminApp.Contexts;
 using HotelAdminApp.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
@@ -95,32 +96,28 @@ namespace HotelAdminApp.Services
             _dbContext.SaveChanges();
 
         }
-                                          //Delete a Room
+        //Delete a Room
 
-         //deleting a room by its ID
-         public void DeleteRoom(int id)
-         { 
+        public void DeleteRoom(int id)
+        {
             var room = _dbContext.Rooms.Find(id);
             if (room == null)
             {
                 throw new KeyNotFoundException($"Room with ID {id} not found.");
             }
 
-            //check if the room has any bookings before deletion
-            bool hasBookings = _dbContext.Bookings.Any(b => b.RoomId == id);
-                {
+            // FIXED: only throw if hasBookings is true
+            bool hasBookings = _dbContext.Bookings.AsNoTracking().Any(b => b.RoomId == id);
+            if (hasBookings)
+            {
                 throw new InvalidOperationException("Cannot delete room with bookings.");
-                }
+            }
 
-            _dbContext.Rooms.Remove(room); //remove or delete room from DbSet
+            _dbContext.Rooms.Remove(room);
             _dbContext.SaveChanges();
-
         }
 
-        internal void AddRoom()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
 

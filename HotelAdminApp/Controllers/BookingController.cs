@@ -260,13 +260,11 @@ namespace HotelAdminApp.Controllers
         //Delete a booking
         public void DeleteBooking()
         {
-
             Console.Clear();
-            GetAllBookings();
+            GetAllBookings(); // Show list before deletion
 
-
-            Console.WriteLine("Enter booking ID: ");
-            if(int.TryParse(Console.ReadLine(),out int bookingId))
+            Console.Write("\nEnter booking ID: ");
+            if (int.TryParse(Console.ReadLine(), out int bookingId))
             {
                 var booking = _bookingService.GetBookingById(bookingId);
                 if (booking == null)
@@ -275,37 +273,33 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.WriteLine($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no)");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"\n⚠️ This booking has an invoice. Deleting it will also delete the related invoice.");
+                Console.ResetColor();
+
+                Console.Write($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no): ");
                 string confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes")
                 {
-                    try
-                    {
-                        _bookingService.DeleteBooking(bookingId);
-                        Console.WriteLine("\nBooking deleted successfully!");
-
-                        //Show updated list
-                        Console.WriteLine("\nUpdated Booking List:");
-                        GetAllBookings();
-                        Console.ReadLine();
-                    }
-                    catch (InvalidOperationException ex) //Catch the error instead of crashing
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
-                        Console.ResetColor();
-                    }
+                    _bookingService.DeleteBooking(bookingId);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("✅ Booking and related invoice deleted successfully.");
+                    Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("\nDeletion canceled.");
+                    Console.WriteLine("❌ Booking not deleted.");
                 }
             }
             else
             {
-                Console.WriteLine("Invalid input.Please enter a valid Booking ID.");
+                Console.WriteLine("Invalid input");
             }
+
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
         }
+
 
 
     }

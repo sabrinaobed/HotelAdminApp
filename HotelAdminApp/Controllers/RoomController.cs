@@ -252,7 +252,7 @@ namespace HotelAdminApp.Controllers
 
                         //Show updated list
                         Console.WriteLine("\nUpdated Room List:");
-                        _roomService.GetAllRooms();
+                        GetAllRooms();
                     }
                     catch (InvalidOperationException ex) //Catch the error instead of crashing
                     {

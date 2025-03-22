@@ -32,7 +32,8 @@ namespace HotelAdminApp.Controllers
             }
             else
             {
-                    foreach (var customer in customers)
+                Console.WriteLine("\nList of all Customers:\n");
+                foreach (var customer in customers)
                     {
                         Console.WriteLine($" ID: {customer.CustomerId},  CustomerName: {customer.Name},  Email: {customer.Email},  PhoneNumber: {customer.PhoneNumber}");
                     }
@@ -229,17 +230,14 @@ namespace HotelAdminApp.Controllers
         //Delete a customer
         public void DeleteCustomer()
         {
-
             Console.Clear();
-            GetAllCustomers();
+            GetAllCustomers(); // Show current customer list
 
-
-
-            Console.WriteLine("Enter Customer ID:  ");
-            if(int.TryParse(Console.ReadLine(),out int customerId))
+            Console.WriteLine("Enter Customer ID: ");
+            if (int.TryParse(Console.ReadLine(), out int customerId))
             {
                 var customer = _customerService.GetCustomerById(customerId);
-                if(customer == null)
+                if (customer == null)
                 {
                     Console.WriteLine("Customer not found");
                     return;
@@ -253,17 +251,19 @@ namespace HotelAdminApp.Controllers
                     try
                     {
                         _customerService.DeleteCustomer(customerId);
-                        Console.WriteLine("\nRoom deleted successfully!");
+                        Console.WriteLine("\nCustomer deleted successfully!");
 
-                        //Show updated list
-                        Console.WriteLine("\nUpdated Room List:");
+                        //Corrected label and method
+                        Console.WriteLine("\nUpdated Customer List:");
                         GetAllCustomers();
+
+                      
                         Console.ReadLine();
                     }
-                    catch (InvalidOperationException ex) //Catch the error instead of crashing
+                    catch (InvalidOperationException ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
+                        Console.WriteLine($"\n{ex.Message}");
                         Console.ResetColor();
                     }
                 }
@@ -274,12 +274,13 @@ namespace HotelAdminApp.Controllers
             }
             else
             {
-                Console.WriteLine("Invalid input. Please enter a valid Room ID.");
+                Console.WriteLine("Invalid input. Please enter a valid Customer ID.");
             }
         }
 
+
     }
-                
+
 }
 
 
