@@ -147,8 +147,19 @@ namespace HotelAdminApp.Controllers
             Console.WriteLine("Checking for unpaid invoices older than 10 days...");
             try
             {
-                _invoiceService.CancelBookingIfInvoiceOverDue();
-                Console.WriteLine("Overdue bookings cancelled successfully!");
+
+              var cancelledBookings =  _invoiceService.CancelBookingIfInvoiceOverDue();
+                
+                if(cancelledBookings.Any())
+                {
+                    Console.WriteLine("\nThe following bookings were cancelled due to overdue unpaid invoices.");
+                }
+                else
+                {
+                    Console.WriteLine("No overdue unpaid invoices found.All bookings are paid.");
+                }
+
+                   
             }
             catch (Exception ex)
             {
