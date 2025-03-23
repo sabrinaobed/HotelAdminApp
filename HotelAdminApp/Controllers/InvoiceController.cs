@@ -51,7 +51,6 @@ namespace HotelAdminApp.Controllers
 
 
 
-
         //Get invoice by ID
         public void GetInvoiceById(int id)
         {
@@ -85,38 +84,54 @@ namespace HotelAdminApp.Controllers
         //Mark an invoice as paid
         public void MarkInvoicePaid()
         {
-            Console.WriteLine("Enter Invoice ID to mark as paid: ");
-            if(int.TryParse(Console.ReadLine(),out int invoiceId))
+
+            Console.Clear();
+            Console.WriteLine("\n Mark Invoice as Paid: ");
+
+
+            //show all invoices
+            var allInvoices = _invoiceService.GetAllInvoices().ToList();
+            if(allInvoices.Count == 0)
             {
-                var invoice = _invoiceService.GetInvoiceById(invoiceId);
-                if (invoice == null)
-                {
-                    Console.WriteLine("Invoice not found. ");
-                    return;
-                }
+                Console.WriteLine("There is no invoice in system.");
+                return;
+            }
+
+            foreach (var invoice in allInvoices)
+            {
+                string paidStatus = invoice.IsPaid ? " PAID" : " UNPAID";
+                Console.WriteLine($"Invoice ID: {invoice.InvoiceId}, Booking ID: {invoice.BookingId}, Total: {invoice.TotalAmount} SEK, Status: {paidStatus}");
+            }
 
 
-                if(invoice.IsPaid)
-                {
-                    Console.WriteLine("Invoice is already marked as paid. ");
-                    return;
-                }
 
+            //ask for invocie details:
+            Console.WriteLine("Enter Invoice ID to mark as paid: ");
+            string input = Console.ReadLine();
+            if (int.TryParse(input, out int invoiceId))
+
+            {
+                //Try to mark as paid
                 try
                 {
                     _invoiceService.MarkInvoicePaid(invoiceId);
-                    Console.WriteLine("Invoice marked as paid successfully!");
+
+                    Console.WriteLine("Invoice marked as paid successfully");
                 }
-                catch(Exception ex)
+                catch (KeyNotFoundException ex)
                 {
-                    Console.WriteLine($"Error marking invoice as paid: {ex.Message}");
+                    Console.WriteLine($"{ex.Message}");
                 }
-                
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine($"{ex.Message}");
+                }
             }
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid ID");
             }
+          
 
         }
 
@@ -131,8 +146,19 @@ namespace HotelAdminApp.Controllers
             Console.WriteLine("Checking for unpaid invoices older than 10 days...");
             try
             {
-                _invoiceService.CancelBookingIfInvoiceOverDue();
-                Console.WriteLine("Overdue bookings cancelled successfully!");
+
+              var cancelledBookings =  _invoiceService.CancelBookingIfInvoiceOverDue();
+                
+                if(cancelledBookings.Any())
+                {
+                    Console.WriteLine("\nThe following bookings were cancelled due to overdue unpaid invoices.");
+                }
+                else
+                {
+                    Console.WriteLine("No overdue unpaid invoices found.All bookings are paid.");
+                }
+
+                   
             }
             catch (Exception ex)
             {

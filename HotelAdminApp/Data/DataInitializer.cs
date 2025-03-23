@@ -62,14 +62,14 @@ namespace HotelAdminApp.Data
 
             if (!IfAnyDataExists(dbContext)) // Check if data exists
             {
-                Console.WriteLine("Seeding data now...");
+               
 
                 SeedRooms(dbContext);
                 SeedCustomers(dbContext);
                 SeedBookings(dbContext);
                 SeedInvoices(dbContext);
 
-                Console.WriteLine("Seeding completed!");
+             
             }
             
          

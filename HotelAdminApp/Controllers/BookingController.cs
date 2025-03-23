@@ -11,11 +11,15 @@ namespace HotelAdminApp.Controllers
     public class BookingController
     {
         private readonly BookingService _bookingService;
+        private readonly CustomerService _customerService;
+        private readonly RoomService _roomService;
 
         //this constructor intializes  Booking service
-        public BookingController(BookingService bookingService)
+        public BookingController(BookingService bookingService, CustomerService customerService, RoomService roomService)
         {
             _bookingService = bookingService;
+            _customerService = customerService;
+            _roomService = roomService;
         }
 
 
@@ -82,19 +86,40 @@ namespace HotelAdminApp.Controllers
         public void AddBooking()
         {
             Console.Clear();
-            Console.WriteLine("\nCurrent Booking List: ");
-            var allBookingsBeforeAddition = _bookingService.GetAllBookings();
-            foreach(var bookings in allBookingsBeforeAddition)
-            {
-                Console.WriteLine($"Booking ID: {bookings.BookingId}, RoomNumber: {bookings.Room.RoomNumber}, CustomerName: {bookings.Customer.Name}, StartDate: {bookings.StartDate}, EndDate: {bookings.EndDate} ");
+            Console.WriteLine("\nAdd a New Booking: ");
 
+            //show all customers
+            Console.WriteLine("\nList of all customers: ");
+            var allCustomers = _customerService.GetAllCustomers();
+            foreach(var c in allCustomers)
+            {
+                Console.WriteLine($"Customer ID: {c.CustomerId}, Name: {c.Name}, Email: {c.Email}, PhoneNumber: {c.PhoneNumber}");
+            }
+
+            //show all rooms
+            Console.WriteLine("\nList of All Rooms(BOOKED rooms are highlighted in yellow):");
+            var allRooms = _roomService.GetAllRooms();
+            var bookedRoomIds = _bookingService.GetAllBookings().Select(b => b.RoomId).Distinct().ToList();
+            foreach(var room in allRooms)
+            {
+                bool isBooked = bookedRoomIds.Contains(room.RoomId);
+                if (isBooked)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+
+
+                    Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, RoomType: {room.RoomType}, Capacity: {room.Capacity}, Price: {room.PricePerNight}" +
+                                (isBooked ? "    BOOKED" : ""));
+                    Console.ResetColor();
+                
             }
 
 
 
             //ADD DETAILS FOR NEW BOOKING
 
-            Console.Write("Enter Customer ID: ");
+            Console.Write("\nEnter Customer ID: ");
             if(!int.TryParse(Console.ReadLine(), out int customerId))
             {
                 Console.WriteLine("Invalid Customer ID. ");
@@ -145,7 +170,8 @@ namespace HotelAdminApp.Controllers
             };
 
             _bookingService.AddBooking(newBooking);
-            Console.WriteLine("Booking added successfully.");
+            Console.WriteLine("Booking and invoice created successfully.");
+            Console.WriteLine("Invoice status: UNPAID(Due within 10 days).");
 
             //Fetch all bookings again
             var allBookings = _bookingService.GetAllBookings();
@@ -187,7 +213,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.WriteLine("Enter Booking ID: ");
-            if(!int.TryParse(Console.ReadLine(), out int bookingId))
+            if(int.TryParse(Console.ReadLine(), out int bookingId))
             {
                 var booking = _bookingService.GetBookingById(bookingId);
                 if(booking == null)
@@ -201,7 +227,7 @@ namespace HotelAdminApp.Controllers
 
 
 
-                Console.Write("Enter new Start Date(YYYY-MM-DD): ");
+                Console.Write("Enter new Start Date(YYYY-MM-DD) (Press enter to continue with same): ");
                 string startInput = Console.ReadLine();
                 if(!string.IsNullOrWhiteSpace(startInput) && DateTime.TryParse(startInput,out DateTime newStartDate) && newStartDate >= DateTime.Today)
                 {
@@ -210,7 +236,7 @@ namespace HotelAdminApp.Controllers
 
 
 
-                Console.Write("Enter new End Date(YYYY-MM-DD): ");
+                Console.Write("Enter new End Date(YYYY-MM-DD) (Press enter to continue with same): ");
                 string endInput = Console.ReadLine();
                 if(!string.IsNullOrWhiteSpace(endInput) && DateTime.TryParse(endInput,out DateTime newEndDate) && newEndDate > booking.StartDate)
                 {
@@ -218,7 +244,7 @@ namespace HotelAdminApp.Controllers
                 }
 
 
-                Console.WriteLine("Enter new number of guests: ");
+                Console.WriteLine("Enter new number of guests (Press enter to continue with same): ");
                 string guestsInput = Console.ReadLine();
                 if (!int.TryParse(guestsInput, out int newGuests) && newGuests > 0)
                 {
@@ -260,13 +286,11 @@ namespace HotelAdminApp.Controllers
         //Delete a booking
         public void DeleteBooking()
         {
-
             Console.Clear();
-            GetAllBookings();
+            GetAllBookings(); // Show list before deletion
 
-
-            Console.WriteLine("Enter booking ID: ");
-            if(int.TryParse(Console.ReadLine(),out int bookingId))
+            Console.Write("\nEnter booking ID: ");
+            if (int.TryParse(Console.ReadLine(), out int bookingId))
             {
                 var booking = _bookingService.GetBookingById(bookingId);
                 if (booking == null)
@@ -275,37 +299,32 @@ namespace HotelAdminApp.Controllers
                     return;
                 }
 
-                Console.WriteLine($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no)");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"\nThis booking has an invoice. Deleting it will also delete the related invoice.");
+                Console.ResetColor();
+
+                Console.Write($"\nAre you sure you want to cancel Booking with ID: {booking.BookingId}? (yes/no): ");
                 string confirmation = Console.ReadLine()?.ToLower();
                 if (confirmation == "yes")
                 {
-                    try
-                    {
-                        _bookingService.DeleteBooking(bookingId);
-                        Console.WriteLine("\nBooking deleted successfully!");
-
-                        //Show updated list
-                        Console.WriteLine("\nUpdated Booking List:");
-                        GetAllBookings();
-                        Console.ReadLine();
-                    }
-                    catch (InvalidOperationException ex) //Catch the error instead of crashing
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"\n{ex.Message}"); // Show user-friendly error
-                        Console.ResetColor();
-                    }
+                    _bookingService.DeleteBooking(bookingId);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Booking and related invoice deleted successfully.");
+                    Console.ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("\nDeletion canceled.");
+                    Console.WriteLine("Booking not deleted.");
                 }
             }
             else
             {
-                Console.WriteLine("Invalid input.Please enter a valid Booking ID.");
+                Console.WriteLine("Invalid input");
             }
+
+         
         }
+
 
 
     }

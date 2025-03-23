@@ -1,5 +1,6 @@
 ﻿using HotelAdminApp.Contexts;
 using HotelAdminApp.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
@@ -49,20 +50,34 @@ namespace HotelAdminApp.Services
            {
                 throw new ArgumentNullException(nameof(room), "Room cannot be null.");
            }
+
+
+          // Check for duplicate RoomNumber
+            bool roomNumberExists = _dbContext.Rooms.Any(r => r.RoomNumber == room.RoomNumber);
+           if (roomNumberExists)
+                    throw new InvalidOperationException($"Room number '{room.RoomNumber}' already exists. Please enter a unique room number.");
+
+
+
             //validate room attributes
-           if(string.IsNullOrWhiteSpace(room.RoomNumber))
+            if (string.IsNullOrWhiteSpace(room.RoomNumber))
            {
                 throw new ArgumentException("Room number cannot be empty");
            }
+
+
            if(room.Capacity <= 0)
            {
            throw new ArgumentException("Room Capacity must be gretaer than 0");
            }
+
+
            if(room.PricePerNight <= 0)
            {
                 throw new ArgumentException("Room price must be greater than 0");
            }
 
+           
            _dbContext.Rooms.Add(room); //Add room to DbSet
            _dbContext.SaveChanges(); //Save changes to database
            }
@@ -95,32 +110,43 @@ namespace HotelAdminApp.Services
             _dbContext.SaveChanges();
 
         }
-                                          //Delete a Room
+        //Delete a Room
 
-         //deleting a room by its ID
-         public void DeleteRoom(int id)
-         { 
+        public void DeleteRoom(int id)
+        {
             var room = _dbContext.Rooms.Find(id);
             if (room == null)
             {
                 throw new KeyNotFoundException($"Room with ID {id} not found.");
             }
 
-            //check if the room has any bookings before deletion
-            bool hasBookings = _dbContext.Bookings.Any(b => b.RoomId == id);
-                {
+            // FIXED: only throw if hasBookings is true
+            bool hasBookings = _dbContext.Bookings.AsNoTracking().Any(b => b.RoomId == id);
+            if (hasBookings)
+            {
                 throw new InvalidOperationException("Cannot delete room with bookings.");
-                }
+            }
 
-            _dbContext.Rooms.Remove(room); //remove or delete room from DbSet
+            _dbContext.Rooms.Remove(room);
             _dbContext.SaveChanges();
-
         }
 
-        internal void AddRoom()
+        //Searxh for Aviable rooms 
+        public List<Room> SearchAvailableRooms(DateTime startDate, DateTime endDate, int numberOfGuests)
         {
-            throw new NotImplementedException();
+            var bookedRooms = _dbContext.Bookings
+                  .Where(b => startDate < b.EndDate && endDate > b.StartDate)
+                  .Select(b => b.RoomId)
+                  .Distinct()
+                  .ToList();
+
+            return _dbContext.Rooms
+                .Where(r => !bookedRooms.Contains(r.RoomId) && r.Capacity >= numberOfGuests)
+                .ToList();
+
+
         }
+
     }
 }
 

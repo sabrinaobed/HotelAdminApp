@@ -76,6 +76,8 @@ namespace HotelAdminApp.Controllers
         public void AddRoom()
         {
             Console.Clear();
+
+
             //Show the list before adding a new room
             Console.WriteLine("\nCurrent Room List:");
             var allRoomsListBeforeAddition = _roomService.GetAllRooms();
@@ -84,8 +86,10 @@ namespace HotelAdminApp.Controllers
                 Console.WriteLine($"ID: {room.RoomId},  RoomNumber: {room.RoomNumber},  RoomType: {room.RoomType},  Capacity: {room.Capacity},  PricePerNight: {room.PricePerNight}SEK");
             }
 
+
+
             //ADD DETAILS FOR NEW ROOM
-            Console.WriteLine("Enter Room Number: ");
+            Console.WriteLine("Enter Room Number(must be unique): ");
             string roomNumber = Console.ReadLine();
 
             Console.WriteLine("Enter Room Type: ");
@@ -119,6 +123,8 @@ namespace HotelAdminApp.Controllers
                 extraBeds = 0;
             }
 
+
+
             //adding room using room service
             Room newRoom = new Room
             {
@@ -129,12 +135,29 @@ namespace HotelAdminApp.Controllers
                 ExtraBeds = extraBeds
             };
 
-            _roomService.AddRoom(newRoom);
+            try
+            {
+                _roomService.AddRoom(newRoom);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nRoom added successfully!");
+                Console.ResetColor();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n{ex.Message}");
+                Console.ResetColor();
+                return;
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nUnexpected error: {ex.Message}");
+                Console.ResetColor();
+                return;
+            }
 
-
-            Console.WriteLine("\nRoom added successfully!");
-
-            //Fetch all rooms again
+            // Fetch and show updated room list
             var allRooms = _roomService.GetAllRooms();
 
             // Show updated list
@@ -181,17 +204,17 @@ namespace HotelAdminApp.Controllers
 
                 Console.WriteLine($"\nUpdating Room Number: {room.RoomNumber}\n");
 
-                Console.Write("Enter new Room Type: ");
+                Console.Write("Enter new Room Type (Press enter to continue with same): ");
                 string input = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(input))
                     room.RoomType = input;
 
-                Console.Write("Enter new Capacity: ");
+                Console.Write("Enter new Capacity (Press enter to continue with same): ");
                 string capacityInput = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(capacityInput) && int.TryParse(capacityInput, out int newCapacity) && newCapacity > 0)
                     room.Capacity = newCapacity;
 
-                Console.Write("Enter new Price Per Night: ");
+                Console.Write("Enter new Price Per Night (Press enter to continue with same): ");
                 string priceInput = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(priceInput) && decimal.TryParse(priceInput, out decimal newPrice) && newPrice > 0)
                     room.PricePerNight = newPrice;
@@ -252,7 +275,7 @@ namespace HotelAdminApp.Controllers
 
                         //Show updated list
                         Console.WriteLine("\nUpdated Room List:");
-                        _roomService.GetAllRooms();
+                        GetAllRooms();
                     }
                     catch (InvalidOperationException ex) //Catch the error instead of crashing
                     {
@@ -270,6 +293,52 @@ namespace HotelAdminApp.Controllers
             {
                 Console.WriteLine("Invalid input. Please enter a valid Room ID.");
             }
+        }
+
+
+        //Search for avaiable rooms
+        public void SearchAvailableRooms()
+        {
+            Console.Clear();
+            Console.WriteLine("\nSearch for Avaiable Rooms accorsing to number of guests and within a specific date range: ");
+
+            Console.WriteLine("Enter Start Date(YYYY-MM-DD): ");
+            if(!DateTime.TryParse(Console.ReadLine(),out DateTime startDate))
+            {
+                Console.WriteLine("Invalid start date");
+                return;
+            }
+
+            Console.WriteLine("Enter End Date(YYYY-MM-DD): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+            {
+                Console.WriteLine("Invalid end date");
+                return;
+            }
+
+
+            Console.WriteLine("Enter number of guests: ");
+            if(!int.TryParse(Console.ReadLine(), out int numberOfGuests) || numberOfGuests <= 0)
+            {
+                Console.WriteLine("Invalid number of guests");
+                return;
+            }
+
+
+            var avaiableRooms = _roomService.SearchAvailableRooms(startDate,endDate,numberOfGuests);
+
+            Console.WriteLine("\n Available Rooms: ");
+            if(!avaiableRooms.Any())
+            {
+                Console.WriteLine("No rooms available for the given criteria");
+                return;
+            }
+
+            foreach (var room in avaiableRooms)
+            {
+                Console.WriteLine($"ID: {room.RoomId}, RoomNumber: {room.RoomNumber}, Type: {room.RoomType}, Capacity: {room.Capacity}, Price: {room.PricePerNight} SEK");
+            }
+
         }
     }
 }

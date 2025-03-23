@@ -31,7 +31,7 @@ namespace HotelAdminApp
                 // Initialize controllers with their respective services
                 RoomController roomController = new RoomController(roomService);
                 CustomerController customerController = new CustomerController(customerService);
-                BookingController bookingController = new BookingController(bookingService);
+                BookingController bookingController = new BookingController(bookingService,customerService,roomService);
                 InvoiceController invoiceController = new InvoiceController(invoiceService);
 
                 //Start the main menu

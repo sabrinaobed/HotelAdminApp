@@ -88,6 +88,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("2. Add a Room");
                 Console.WriteLine("3. Update a Room");
                 Console.WriteLine("4. Delete a Room");
+                Console.WriteLine("5. Search Avaiable Rooms");
                 Console.WriteLine("0. Back to Main Menu");
 
                 Console.WriteLine("\nSelect an option to proceed: \n");
@@ -107,6 +108,9 @@ namespace HotelAdminApp.Menu
                         break;
                     case "4":
                         _roomController.DeleteRoom();
+                        break;
+                    case "5":
+                        _roomController.SearchAvailableRooms();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
