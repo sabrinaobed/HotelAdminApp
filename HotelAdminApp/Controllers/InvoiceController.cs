@@ -51,7 +51,6 @@ namespace HotelAdminApp.Controllers
 
 
 
-
         //Get invoice by ID
         public void GetInvoiceById(int id)
         {
