@@ -300,7 +300,7 @@ namespace HotelAdminApp.Controllers
         public void SearchAvailableRooms()
         {
             Console.Clear();
-            Console.WriteLine("\nSearch for Avaiable Rooms accorsing to number of guests and within a specific date range: ");
+            Console.WriteLine("\nSearch for Avaiable Rooms according to number of guests and within a specific date range: ");
 
             Console.WriteLine("Enter Start Date(YYYY-MM-DD): ");
             if(!DateTime.TryParse(Console.ReadLine(),out DateTime startDate))
