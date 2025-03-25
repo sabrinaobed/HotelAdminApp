@@ -120,7 +120,7 @@ namespace HotelAdminApp.Controllers
             //ADD DETAILS FOR NEW BOOKING
 
             Console.Write("\nEnter Customer ID: ");
-            if(!int.TryParse(Console.ReadLine(), out int customerId))
+            if(!int.TryParse(Console.ReadLine()?.Trim(), out int customerId))
             {
                 Console.WriteLine("Invalid Customer ID. ");
                 return;
@@ -129,7 +129,7 @@ namespace HotelAdminApp.Controllers
 
 
             Console.Write("Enter Room ID:  ");
-            if (!int.TryParse(Console.ReadLine(), out int roomId))
+            if (!int.TryParse(Console.ReadLine()?.Trim(), out int roomId))
             {
                 Console.WriteLine("Invalid Room ID. ");
                 return;
@@ -169,9 +169,23 @@ namespace HotelAdminApp.Controllers
                 NumberOfGuests = numberOfGuests
             };
 
-            _bookingService.AddBooking(newBooking);
-            Console.WriteLine("Booking and invoice created successfully.");
-            Console.WriteLine("Invoice status: UNPAID(Due within 10 days).");
+            try
+            {
+                _bookingService.AddBooking(newBooking);
+                Console.WriteLine("Booking and invoice created successfully.");
+                Console.WriteLine("Invoice status: UNPAID(Due within 10 days).");
+
+            }
+            catch(ArgumentException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return;
+            }
+            catch(InvalidOperationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return;
+            }
 
             //Fetch all bookings again
             var allBookings = _bookingService.GetAllBookings();
