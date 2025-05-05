@@ -58,12 +58,22 @@ namespace HotelAdminApp.Services
         public void MarkInvoicePaid(int invoiceId)
         {
             var invoice = _dbContext.Invoices.Find(invoiceId);
+            //check if invoice exists
             if(invoice == null)
             {
                 throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
             }
 
+            //prevent marking already paid invoice
+            if(invoice.IsPaid)
+            {
+                throw new InvalidOperationException("This invoice is already marked paid.");
+            }
+
+            //Mark as paid
             invoice.IsPaid = true;
+
+            //save changes
             _dbContext.Invoices.Update(invoice);
             _dbContext.SaveChanges();
 
@@ -76,27 +86,31 @@ namespace HotelAdminApp.Services
 
 
                                                        //Cancel Booking if invocie is overdue
-        public void CancelBookingIfInvoiceOverDue()
+        public List<Booking> CancelBookingIfInvoiceOverDue()
         {
-            var today = DateTime.Today;
+         var now = DateTime.Now;
 
             //finding all invoices which are overdue
             var overdueInvoices = _dbContext.Invoices
                 .Include(i => i.Booking)
-                .Where(i => !i.IsPaid && i.DueDate < today.AddDays(-10))
+                .Where(i => !i.IsPaid && i.DueDate < DateTime.Now)
                 .ToList();
+
+            var cancelledBookings = new List<Booking>();
 
           foreach(var invoice in overdueInvoices)
             {
-                var booking = invoice.Booking;
-                if(booking != null)
+              
+                if(invoice.Booking != null)
                 {
-                    _dbContext.Bookings.Remove(booking); //first remove booking
+                    cancelledBookings.Add(invoice.Booking);
+                    _dbContext.Bookings.Remove(invoice.Booking); //first remove booking
                     
                 }
-                _dbContext.Invoices.Remove(invoice);//then remove invocie
+                
             }
           _dbContext.SaveChanges();
+            return cancelledBookings;
         }
     }
 }

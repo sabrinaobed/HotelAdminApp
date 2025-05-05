@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HotelAdminApp.Controllers;
+using HotelAdminApp.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,26 @@ namespace HotelAdminApp.Menu
     public class MainMenu
     {
 
+        //used for DI and ensures all controllers have access to services for handling business logic
+
+        private readonly RoomController _roomController;
+        private readonly CustomerController _customerController;
+        private readonly BookingController _bookingController;
+        private readonly InvoiceController _invoiceController;
+
+
+
+        //Constructor to initialize the controllers via DI
+        public MainMenu(RoomController roomController, CustomerController customerController, BookingController bookingController, InvoiceController invoiceController)
+        {
+            _roomController = roomController;
+            _customerController = customerController;
+            _bookingController = bookingController;
+            _invoiceController = invoiceController;
+        }    
+        
+
+        
         //This method is to show main menu and runs in loop until user chooses to exit.
         public void ShowMainMenu()
         {
@@ -22,25 +44,30 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("4. Manage Invoices");
                 Console.WriteLine("0. Exit");
 
-                Console.Write("Select an option to proceed: \n");
+                Console.Write("\nSelect an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
+                        RoomMenu();
                         break;
                     case "2":
+                        CustomerMenu();
                         break;
                     case "3":
+                        BookingMenu();
                         break;
                     case "4":
+                          InvoiceMenu();
                         break;
                     case "0":
-                        Console.WriteLine("Exiting the app...");
+                        Console.WriteLine("Exiting the application...");
                         return;
                     default:
                         Console.WriteLine("Invalid choice!Choose the correct option...");
+                        Console.ReadLine();
                         break;
                 }
             }
@@ -61,29 +88,41 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("2. Add a Room");
                 Console.WriteLine("3. Update a Room");
                 Console.WriteLine("4. Delete a Room");
+                Console.WriteLine("5. Search Avaiable Rooms");
                 Console.WriteLine("0. Back to Main Menu");
 
-                Console.WriteLine("Select an option to proceed: \n");
+                Console.WriteLine("\nSelect an option to proceed: \n");
 
                 string choice = Console.ReadLine();
 
                 switch(choice)
                 {
                     case "1":
+                        _roomController.GetAllRooms();
                         break;
                     case "2":
+                        _roomController.AddRoom();
                         break;
                     case "3":
+                        _roomController.UpdateRoom();
                         break;
                     case "4":
+                        _roomController.DeleteRoom();
+                        break;
+                    case "5":
+                        _roomController.SearchAvailableRooms();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
                         return;
                     default:
                         Console.WriteLine("Invalid choice!Choose the correct option...");
+                        Console.ReadLine();
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
+
             }
 
         }
@@ -109,12 +148,16 @@ namespace HotelAdminApp.Menu
                 switch (choice)
                 {
                     case "1":
+                        _customerController.GetAllCustomers();
                         break;
                     case "2":
+                        _customerController.AddCustomer();
                         break;
                     case "3":
+                        _customerController.UpdateCustomer();
                         break;
                     case "4":
+                         _customerController.DeleteCustomer();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
@@ -123,6 +166,8 @@ namespace HotelAdminApp.Menu
                         Console.WriteLine("Invalid option!Please try again with the correct option...");
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
 
             }
         }
@@ -148,12 +193,16 @@ namespace HotelAdminApp.Menu
                 switch (choice)
                 {
                     case "1":
+                        _bookingController.GetAllBookings();
                         break;
                     case "2":
+                        _bookingController.AddBooking();
                         break;
                     case "3":
+                        _bookingController.UpdateBooking();
                         break;
                     case "4":
+                        _bookingController.DeleteBooking();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu");
@@ -162,6 +211,8 @@ namespace HotelAdminApp.Menu
                         Console.WriteLine("Invalid option!Please try again with the correct option...");
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
 
             }
 
@@ -180,6 +231,7 @@ namespace HotelAdminApp.Menu
                 Console.WriteLine("---- Invoice Management Menu ----\n");
                 Console.WriteLine("1. Show All Invoices");
                 Console.WriteLine("2. Update Invoice as Paid");
+                Console.WriteLine("3. Cancel Overdue Bookings");
                 Console.WriteLine("0. Back to Main Menu");
 
                 Console.WriteLine("Select an option to proceed: ");
@@ -189,8 +241,13 @@ namespace HotelAdminApp.Menu
                 switch(choice)
                 {
                     case "1":
+                        _invoiceController.GetAllInvoices();
                         break;
                     case "2":
+                        _invoiceController.MarkInvoicePaid();
+                        break;
+                    case "3":
+                        _invoiceController.CancelOverdueBookings();
                         break;
                     case "0":
                         Console.WriteLine("Back to Main Menu.");
@@ -199,6 +256,8 @@ namespace HotelAdminApp.Menu
                         Console.WriteLine("Invalid choice! Please try again with the right option...");
                         break;
                 }
+                Console.WriteLine("\nPress Enter to continue...");
+                Console.ReadLine();
             }
 
         }

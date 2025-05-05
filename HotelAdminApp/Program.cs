@@ -7,15 +7,36 @@ namespace HotelAdminApp
     {
         static void Main(string[] args)
         {
-            //Creating an instance of ApplicationDbContext using DataInitializer.Build() method
+            //Initialize the database context
             using (var dbContext = DataInitializer.Build())
             {
-                DataInitializer.SeedData(dbContext);
+                DataInitializer.SeedData(dbContext);    
 
-                // Call main menu after seeding
-                var menu = new MainMenu();
-                menu.ShowMainMenu();
+                //Debug - Show counts to verify seeding worked
+                Console.WriteLine("Room count: " + dbContext.Rooms.Count());
+                Console.WriteLine("Customer count: " + dbContext.Customers.Count());
+                Console.WriteLine("Booking count: " + dbContext.Bookings.Count());
+                Console.WriteLine("Invoice count: " + dbContext.Invoices.Count());
 
+                //Initialize services
+                RoomService roomService = new RoomService(dbContext);
+                CustomerService customerService = new CustomerService(dbContext);
+                BookingService bookingService = new BookingService(dbContext);
+                InvoiceService invoiceService = new InvoiceService(dbContext);
+
+
+                // Initialize controllers with their respective services
+                RoomController roomController = new RoomController(roomService);
+                CustomerController customerController = new CustomerController(customerService);
+                BookingController bookingController = new BookingController(bookingService,customerService,roomService);
+                InvoiceController invoiceController = new InvoiceController(invoiceService);
+
+                //Start the main menu
+               var mainMenu = new MainMenu(roomController,customerController,bookingController,invoiceController);
+                mainMenu.ShowMainMenu();
+
+
+                Console.ReadLine();
             }
         }
     }
