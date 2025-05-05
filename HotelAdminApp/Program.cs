@@ -1,4 +1,5 @@
 ﻿using HotelAdminApp.Data;
+using HotelAdminApp.Menu;
 
 namespace HotelAdminApp
 {
@@ -9,7 +10,11 @@ namespace HotelAdminApp
             //Creating an instance of ApplicationDbContext using DataInitializer.Build() method
             using (var dbContext = DataInitializer.Build())
             {
-                DataInitializer.SeedData(dbContext);    
+                DataInitializer.SeedData(dbContext);
+
+                // Call main menu after seeding
+                var menu = new MainMenu();
+                menu.ShowMainMenu();
 
             }
         }
